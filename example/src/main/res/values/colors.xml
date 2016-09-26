@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 L4 Digital LLC. All rights reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <!-- Color Definitions - ONLY USE TO DEFINE OTHER COLORS -->
+    <color name="theme_gray_1">#313131</color>
+    <color name="theme_gray_2">#999999</color>
+    <color name="theme_orange_1">#f36807</color>
+    <color name="theme_orange_2">#bf5926</color>
+    <color name="theme_white_1">#ffffff</color>
+
+    <!-- Theme -->
+    <color name="app_accent">@color/theme_orange_1</color>
+    <color name="app_primary">@color/theme_orange_1</color>
+    <color name="app_primary_dark">@color/theme_orange_2</color>
+
+    <!-- Fast Scroll -->
+    <color name="fastscroll_bubble">@color/theme_orange_1</color>
+    <color name="fastscroll_handle">@color/theme_gray_2</color>
+    <color name="fastscroll_text">@color/theme_white_1</color>
+
+</resources>
