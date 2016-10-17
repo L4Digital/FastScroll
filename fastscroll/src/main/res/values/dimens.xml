@@ -21,7 +21,7 @@
     <dimen name="fastscroll_bubble_size">88dp</dimen>
     <dimen name="fastscroll_bubble_textsize">48sp</dimen>
 
-    <dimen name="fastscroll_handle_height">32dp</dimen>
+    <dimen name="fastscroll_handle_height">40dp</dimen>
     <dimen name="fastscroll_handle_width">4dp</dimen>
     <dimen name="fastscroll_handle_radius">2dp</dimen>
 

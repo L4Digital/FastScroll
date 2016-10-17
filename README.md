@@ -1,7 +1,7 @@
 #FastScroll
 [![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html)
-[![Download](https://img.shields.io/badge/JCenter-1.0.0-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
+[![Download](https://img.shields.io/badge/JCenter-1.0.1-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
 
 A ListView-like FastScroller for Android’s RecyclerView.
 
@@ -18,7 +18,7 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 ####Gradle:
 ~~~groovy
 dependencies {
-    compile 'com.l4digital.fastscroll:fastscroll:1.0.0'
+    compile 'com.l4digital.fastscroll:fastscroll:1.0.1'
 }
 ~~~
 
@@ -27,7 +27,7 @@ dependencies {
 <dependency>
   <groupId>com.l4digital.fastscroll</groupId>
   <artifactId>fastscroll</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ~~~
 
@@ -49,7 +49,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
 Add the `FastScrollRecyclerView` to your xml layout and set your customizations using attributes.  
 
-*The parent ViewGroup must be a FrameLayout or RelativeLayout in order for the FastScroller to be properly displayed on top of the RecyclerView.*
+*The parent ViewGroup must be a CoordinatorLayout, FrameLayout, or RelativeLayout in order for the FastScroller to be properly displayed on top of the RecyclerView.*
 
 ~~~xml
 <FrameLayout

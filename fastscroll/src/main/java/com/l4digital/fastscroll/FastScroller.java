@@ -24,6 +24,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
@@ -137,12 +139,25 @@ public class FastScroller extends LinearLayout {
     }
 
     public void setLayoutParams(ViewGroup viewGroup) {
-        if (viewGroup instanceof FrameLayout) {
+        if (viewGroup instanceof CoordinatorLayout) {
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) getLayoutParams();
+            @IdRes int layoutId = mRecyclerView.getId();
+
+            if (layoutId != NO_ID) {
+                layoutParams.setAnchorId(layoutId);
+                layoutParams.anchorGravity = GravityCompat.END;
+            } else {
+                layoutParams.gravity = GravityCompat.END;
+            }
+            setLayoutParams(layoutParams);
+        } else if (viewGroup instanceof FrameLayout) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
+
             layoutParams.gravity = GravityCompat.END;
             setLayoutParams(layoutParams);
         } else if (viewGroup instanceof RelativeLayout) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
             } else {
@@ -150,7 +165,7 @@ public class FastScroller extends LinearLayout {
             }
             setLayoutParams(layoutParams);
         } else {
-            throw new IllegalArgumentException("Parent ViewGroup must be a FrameLayout or RelativeLayout");
+            throw new IllegalArgumentException("Parent ViewGroup must be a CoordinatorLayout, FrameLayout, or RelativeLayout");
         }
     }
 

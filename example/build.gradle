@@ -16,6 +16,10 @@
 
 apply plugin: 'com.android.application'
 
+ext {
+    supportLibVersion = '24.2.1'
+}
+
 android {
     compileSdkVersion 24
     buildToolsVersion '24.0.2'
@@ -41,5 +45,5 @@ android {
 
 dependencies {
     compile project(':fastscroll')
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
 }
