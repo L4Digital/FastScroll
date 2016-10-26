@@ -112,8 +112,8 @@ publishing {
 }
 
 bintray {
-    user = bintray_user
-    key = bintray_apikey
+    user = project.findProperty("bintray_user") ?: ""
+    key = project.findProperty("bintray_apikey") ?: ""
 
     publications = ['aar', 'java']
 

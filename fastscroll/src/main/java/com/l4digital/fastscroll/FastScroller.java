@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -133,12 +134,12 @@ public class FastScroller extends LinearLayout {
     }
 
     @Override
-    public void setLayoutParams(ViewGroup.LayoutParams params) {
+    public void setLayoutParams(@NonNull ViewGroup.LayoutParams params) {
         params.width = LayoutParams.WRAP_CONTENT;
         super.setLayoutParams(params);
     }
 
-    public void setLayoutParams(ViewGroup viewGroup) {
+    public void setLayoutParams(@NonNull ViewGroup viewGroup) {
         if (viewGroup instanceof CoordinatorLayout) {
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) getLayoutParams();
             @IdRes int layoutId = mRecyclerView.getId();
