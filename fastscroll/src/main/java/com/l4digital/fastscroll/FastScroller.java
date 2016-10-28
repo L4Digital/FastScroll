@@ -413,18 +413,17 @@ public class FastScroller extends LinearLayout {
     }
 
     private void showScrollbar() {
-        if ((mRecyclerView.computeVerticalScrollRange() - mHeight) <= 0) {
-            return;
-        }
-        float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding);
+        if (mRecyclerView.computeVerticalScrollRange() - mHeight > 0) {
+            float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding);
 
-        mScrollbar.setTranslationX(transX);
-        mScrollbar.setVisibility(VISIBLE);
-        mScrollbarAnimator = mScrollbar.animate().translationX(0f).alpha(1f)
-                .setDuration(sScrollbarAnimDuration)
-                .setListener(new AnimatorListenerAdapter() {
-                    // adapter required for new alpha value to stick
-                });
+            mScrollbar.setTranslationX(transX);
+            mScrollbar.setVisibility(VISIBLE);
+            mScrollbarAnimator = mScrollbar.animate().translationX(0f).alpha(1f)
+                    .setDuration(sScrollbarAnimDuration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        // adapter required for new alpha value to stick
+                    });
+        }
     }
 
     private void hideScrollbar() {
