@@ -413,6 +413,9 @@ public class FastScroller extends LinearLayout {
     }
 
     private void showScrollbar() {
+        if ((mRecyclerView.computeVerticalScrollRange() - mHeight) <= 0) {
+            return;
+        }
         float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding);
 
         mScrollbar.setTranslationX(transX);
