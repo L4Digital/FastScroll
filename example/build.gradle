@@ -17,18 +17,18 @@
 apply plugin: 'com.android.application'
 
 ext {
-    supportLibVersion = '24.2.1'
+    supportLibVersion = '25.1.0'
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.l4digital.fastscroll.example"
 
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
 
         versionCode 1
         versionName "1.0"

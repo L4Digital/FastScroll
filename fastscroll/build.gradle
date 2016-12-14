@@ -24,16 +24,16 @@ def libraryGroup = 'com.l4digital.fastscroll'
 def libraryVersion = '1.0.1'
 
 ext {
-    supportLibVersion = '24.2.1'
+    supportLibVersion = '25.1.0'
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
 
         versionCode 1
         versionName libraryVersion
