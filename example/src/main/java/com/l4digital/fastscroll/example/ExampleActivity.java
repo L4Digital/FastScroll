@@ -24,9 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.l4digital.fastscroll.FastScrollRecyclerView;
 import com.l4digital.fastscroll.FastScroller;
+import com.l4digital.fastscroll.OnFastScrollStateChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,17 @@ public class ExampleActivity extends AppCompatActivity {
         FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ExampleAdapter());
+        recyclerView.setOnFastScrollStateChangeListener(new OnFastScrollStateChangeListener() {
+            @Override
+            public void onFastScrollStart() {
+                Toast.makeText(ExampleActivity.this, "Fast scroll started", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFastScrollStop() {
+                Toast.makeText(ExampleActivity.this, "Fast scroll stopped", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private static class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHolder> implements FastScroller.SectionIndexer {

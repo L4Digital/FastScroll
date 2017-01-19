@@ -73,6 +73,8 @@ public class FastScroller extends LinearLayout {
     private Drawable mHandleImage;
     private Drawable mTrackImage;
 
+    private OnFastScrollStateChangeListener mOnFastScrollStateChangeListener;
+
     private Runnable mScrollbarHider = new Runnable() {
 
         @Override
@@ -274,6 +276,15 @@ public class FastScroller extends LinearLayout {
         mBubbleView.setTextColor(color);
     }
 
+    /**
+     * Set the fast scroll state change listener.
+     *
+     * @param onFastScrollStateChangeListener The interface that will listen to fastscroll state change events
+     */
+    public void setOnFastScrollStateChangeListener(OnFastScrollStateChangeListener onFastScrollStateChangeListener) {
+        mOnFastScrollStateChangeListener = onFastScrollStateChangeListener;
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -301,6 +312,10 @@ public class FastScroller extends LinearLayout {
             if (mSectionIndexer != null && !isViewVisible(mBubbleView)) {
                 showBubble();
             }
+
+            if (mOnFastScrollStateChangeListener != null) {
+                mOnFastScrollStateChangeListener.onFastScrollStart();
+            }
         case MotionEvent.ACTION_MOVE:
             final float y = event.getY();
             setViewPositions(y);
@@ -316,6 +331,10 @@ public class FastScroller extends LinearLayout {
 
             if (isViewVisible(mBubbleView)) {
                 hideBubble();
+            }
+
+            if (mOnFastScrollStateChangeListener != null) {
+                mOnFastScrollStateChangeListener.onFastScrollStop();
             }
 
             return true;

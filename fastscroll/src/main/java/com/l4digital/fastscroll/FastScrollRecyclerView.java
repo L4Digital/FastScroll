@@ -116,6 +116,15 @@ public class FastScrollRecyclerView extends RecyclerView {
         mFastScroller.setBubbleTextColor(color);
     }
 
+    /**
+     * Set the fast scroll state change listener.
+     *
+     * @param onFastScrollStateChangeListener The interface that will listen to fastscroll state change events
+     */
+    public void setOnFastScrollStateChangeListener(OnFastScrollStateChangeListener onFastScrollStateChangeListener) {
+        mFastScroller.setOnFastScrollStateChangeListener(onFastScrollStateChangeListener);
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
