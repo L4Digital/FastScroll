@@ -31,7 +31,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -344,7 +343,7 @@ public class FastScroller extends LinearLayout {
             }
 
             int targetPos = getValueInRange(0, itemCount - 1, (int) (proportion * (float) itemCount));
-            ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(targetPos, 0);
+            mRecyclerView.getLayoutManager().scrollToPosition(targetPos);
 
             if (mSectionIndexer != null) {
                 mBubbleView.setText(mSectionIndexer.getSectionText(targetPos));
