@@ -73,7 +73,7 @@ public class FastScroller extends LinearLayout {
     private Drawable mHandleImage;
     private Drawable mTrackImage;
 
-    private OnFastScrollStateChangeListener mOnFastScrollStateChangeListener;
+    private FastScrollStateChangeListener mFastScrollStateChangeListener;
 
     private Runnable mScrollbarHider = new Runnable() {
 
@@ -279,10 +279,10 @@ public class FastScroller extends LinearLayout {
     /**
      * Set the fast scroll state change listener.
      *
-     * @param onFastScrollStateChangeListener The interface that will listen to fastscroll state change events
+     * @param fastScrollStateChangeListener The interface that will listen to fastscroll state change events
      */
-    public void setOnFastScrollStateChangeListener(OnFastScrollStateChangeListener onFastScrollStateChangeListener) {
-        mOnFastScrollStateChangeListener = onFastScrollStateChangeListener;
+    public void setFastScrollStateChangeListener(FastScrollStateChangeListener fastScrollStateChangeListener) {
+        mFastScrollStateChangeListener = fastScrollStateChangeListener;
     }
 
     @Override
@@ -313,8 +313,8 @@ public class FastScroller extends LinearLayout {
                 showBubble();
             }
 
-            if (mOnFastScrollStateChangeListener != null) {
-                mOnFastScrollStateChangeListener.onFastScrollStart();
+            if (mFastScrollStateChangeListener != null) {
+                mFastScrollStateChangeListener.onFastScrollStart();
             }
         case MotionEvent.ACTION_MOVE:
             final float y = event.getY();
@@ -333,8 +333,8 @@ public class FastScroller extends LinearLayout {
                 hideBubble();
             }
 
-            if (mOnFastScrollStateChangeListener != null) {
-                mOnFastScrollStateChangeListener.onFastScrollStop();
+            if (mFastScrollStateChangeListener != null) {
+                mFastScrollStateChangeListener.onFastScrollStop();
             }
 
             return true;

@@ -16,7 +16,7 @@
 
 package com.l4digital.fastscroll;
 
-public interface OnFastScrollStateChangeListener {
+public interface FastScrollStateChangeListener {
 
     /**
      * Called when fast scrolling begins

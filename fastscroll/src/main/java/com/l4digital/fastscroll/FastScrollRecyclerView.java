@@ -119,10 +119,10 @@ public class FastScrollRecyclerView extends RecyclerView {
     /**
      * Set the fast scroll state change listener.
      *
-     * @param onFastScrollStateChangeListener The interface that will listen to fastscroll state change events
+     * @param fastScrollStateChangeListener The interface that will listen to fastscroll state change events
      */
-    public void setOnFastScrollStateChangeListener(OnFastScrollStateChangeListener onFastScrollStateChangeListener) {
-        mFastScroller.setOnFastScrollStateChangeListener(onFastScrollStateChangeListener);
+    public void setFastScrollStateChangeListener(FastScrollStateChangeListener fastScrollStateChangeListener) {
+        mFastScroller.setFastScrollStateChangeListener(fastScrollStateChangeListener);
     }
 
     @Override
