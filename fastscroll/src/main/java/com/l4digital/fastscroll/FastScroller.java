@@ -26,6 +26,8 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -141,33 +143,46 @@ public class FastScroller extends LinearLayout {
     }
 
     public void setLayoutParams(@NonNull ViewGroup viewGroup) {
-        if (viewGroup instanceof CoordinatorLayout) {
-            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) getLayoutParams();
-            @IdRes int layoutId = mRecyclerView.getId();
+        @IdRes int recyclerViewId = mRecyclerView.getId();
 
-            if (layoutId != NO_ID) {
-                layoutParams.setAnchorId(layoutId);
-                layoutParams.anchorGravity = GravityCompat.END;
-            } else {
-                layoutParams.gravity = GravityCompat.END;
-            }
+        if (recyclerViewId == NO_ID) {
+            throw new IllegalArgumentException("RecyclerView must have a view ID");
+        }
+
+        if (viewGroup instanceof ConstraintLayout) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            @IdRes int layoutId = getId();
+
+            constraintSet.connect(layoutId, ConstraintSet.TOP, recyclerViewId, ConstraintSet.TOP);
+            constraintSet.connect(layoutId, ConstraintSet.BOTTOM, recyclerViewId, ConstraintSet.BOTTOM);
+            constraintSet.connect(layoutId, ConstraintSet.END, recyclerViewId, ConstraintSet.END);
+            constraintSet.applyTo((ConstraintLayout) viewGroup);
+
+        } else if (viewGroup instanceof CoordinatorLayout) {
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) getLayoutParams();
+
+            layoutParams.setAnchorId(recyclerViewId);
+            layoutParams.anchorGravity = GravityCompat.END;
             setLayoutParams(layoutParams);
+
         } else if (viewGroup instanceof FrameLayout) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
 
             layoutParams.gravity = GravityCompat.END;
             setLayoutParams(layoutParams);
+
         } else if (viewGroup instanceof RelativeLayout) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
+            int endRule = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ?
+                    RelativeLayout.ALIGN_END : RelativeLayout.ALIGN_RIGHT;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-            } else {
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            }
+            layoutParams.addRule(RelativeLayout.ALIGN_TOP, recyclerViewId);
+            layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, recyclerViewId);
+            layoutParams.addRule(endRule, recyclerViewId);
             setLayoutParams(layoutParams);
+
         } else {
-            throw new IllegalArgumentException("Parent ViewGroup must be a CoordinatorLayout, FrameLayout, or RelativeLayout");
+            throw new IllegalArgumentException("Parent ViewGroup must be a ConstraintLayout, CoordinatorLayout, FrameLayout, or RelativeLayout");
         }
     }
 

@@ -16,22 +16,18 @@
 
 apply plugin: 'com.android.application'
 
-ext {
-    supportLibVersion = '25.1.1'
-}
-
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    compileSdkVersion rootProject.ext.sdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.l4digital.fastscroll.example"
+        applicationId 'com.l4digital.fastscroll.example'
 
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion rootProject.ext.sdkVersion
 
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
 
     buildTypes {
@@ -45,5 +41,5 @@ android {
 
 dependencies {
     compile project(':fastscroll')
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
 }
