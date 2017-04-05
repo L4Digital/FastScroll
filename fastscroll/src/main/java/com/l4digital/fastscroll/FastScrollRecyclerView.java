@@ -23,6 +23,8 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.l4digital.fastscroll.FastScroller.SectionIndexer;
+
 public class FastScrollRecyclerView extends RecyclerView {
 
     private FastScroller mFastScroller;
@@ -46,11 +48,20 @@ public class FastScrollRecyclerView extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
 
-        if (adapter instanceof FastScroller.SectionIndexer) {
-            mFastScroller.setSectionIndexer((FastScroller.SectionIndexer) adapter);
-        } else {
-            mFastScroller.setSectionIndexer(null);
+        if (adapter instanceof SectionIndexer) {
+            setSectionIndexer((SectionIndexer) adapter);
+        } else if (adapter == null) {
+            setSectionIndexer(null);
         }
+    }
+
+    /**
+     * Set the {@link SectionIndexer} for the {@link FastScroller}.
+     *
+     * @param sectionIndexer The SectionIndexer that provides section text for the FastScroller
+     */
+    public void setSectionIndexer(SectionIndexer sectionIndexer) {
+        mFastScroller.setSectionIndexer(sectionIndexer);
     }
 
     /**
@@ -147,5 +158,6 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     private void layout(Context context, AttributeSet attrs) {
         mFastScroller = new FastScroller(context, attrs);
+        mFastScroller.setId(R.id.fastscroller);
     }
 }
