@@ -144,6 +144,8 @@ public class FastScroller extends LinearLayout {
 
     public void setLayoutParams(@NonNull ViewGroup viewGroup) {
         @IdRes int recyclerViewId = mRecyclerView.getId();
+        int marginTop = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_top);
+        int marginBottom = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_bottom);
 
         if (recyclerViewId == NO_ID) {
             throw new IllegalArgumentException("RecyclerView must have a view ID");
@@ -158,17 +160,23 @@ public class FastScroller extends LinearLayout {
             constraintSet.connect(layoutId, ConstraintSet.END, recyclerViewId, ConstraintSet.END);
             constraintSet.applyTo((ConstraintLayout) viewGroup);
 
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
+            layoutParams.setMargins(0, marginTop, 0, marginBottom);
+            setLayoutParams(layoutParams);
+
         } else if (viewGroup instanceof CoordinatorLayout) {
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) getLayoutParams();
 
             layoutParams.setAnchorId(recyclerViewId);
             layoutParams.anchorGravity = GravityCompat.END;
+            layoutParams.setMargins(0, marginTop, 0, marginBottom);
             setLayoutParams(layoutParams);
 
         } else if (viewGroup instanceof FrameLayout) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
 
             layoutParams.gravity = GravityCompat.END;
+            layoutParams.setMargins(0, marginTop, 0, marginBottom);
             setLayoutParams(layoutParams);
 
         } else if (viewGroup instanceof RelativeLayout) {
@@ -179,6 +187,7 @@ public class FastScroller extends LinearLayout {
             layoutParams.addRule(RelativeLayout.ALIGN_TOP, recyclerViewId);
             layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, recyclerViewId);
             layoutParams.addRule(endRule, recyclerViewId);
+            layoutParams.setMargins(0, marginTop, 0, marginBottom);
             setLayoutParams(layoutParams);
 
         } else {
@@ -388,7 +397,8 @@ public class FastScroller extends LinearLayout {
     private float getScrollProportion(RecyclerView recyclerView) {
         final int verticalScrollOffset = recyclerView.computeVerticalScrollOffset();
         final int verticalScrollRange = recyclerView.computeVerticalScrollRange();
-        float proportion = (float) verticalScrollOffset / ((float) verticalScrollRange - mHeight);
+        final float rangeDiff = verticalScrollRange - mHeight;
+        float proportion = (float) verticalScrollOffset / (rangeDiff > 0 ? rangeDiff : 1f);
         return mHeight * proportion;
     }
 
@@ -447,7 +457,7 @@ public class FastScroller extends LinearLayout {
 
     private void showScrollbar() {
         if (mRecyclerView.computeVerticalScrollRange() - mHeight > 0) {
-            float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding);
+            float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding_end);
 
             mScrollbar.setTranslationX(transX);
             mScrollbar.setVisibility(VISIBLE);
@@ -460,7 +470,7 @@ public class FastScroller extends LinearLayout {
     }
 
     private void hideScrollbar() {
-        float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding);
+        float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding_end);
 
         mScrollbarAnimator = mScrollbar.animate().translationX(transX).alpha(0f)
                 .setDuration(sScrollbarAnimDuration)

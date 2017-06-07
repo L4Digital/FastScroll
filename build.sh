@@ -5,4 +5,4 @@
     generateArchives \
     generatePomFileForAarPublication
 
-open fastscroll/build/outputs/lint-results-release.html
+open fastscroll/build/reports/lint-results-release.html

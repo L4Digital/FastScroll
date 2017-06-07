@@ -19,17 +19,8 @@ package com.l4digital.fastscroll.example;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.l4digital.fastscroll.FastScrollRecyclerView;
-import com.l4digital.fastscroll.FastScroller;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExampleActivity extends AppCompatActivity {
 
@@ -41,56 +32,5 @@ public class ExampleActivity extends AppCompatActivity {
         FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ExampleAdapter());
-    }
-
-    private static class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHolder> implements FastScroller.SectionIndexer {
-
-        private final List<String> mItemList;
-
-        public ExampleAdapter() {
-            mItemList = new ArrayList<>();
-
-            for (int i = 0; i < 26; i++) {
-                // add several items for each letter in the alphabet
-                for (int x = 0; x < 5; x++) {
-                    mItemList.add(Character.toString((char) (65 + i)) + " example item");
-                }
-            }
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return new ViewHolder(inflater.inflate(R.layout.item_example, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bind(mItemList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mItemList.size();
-        }
-
-        @Override
-        public String getSectionText(int position) {
-            return String.valueOf(mItemList.get(position).charAt(0));
-        }
-
-        static class ViewHolder extends RecyclerView.ViewHolder {
-
-            private TextView mTextView;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                mTextView = (TextView) itemView;
-            }
-
-            public void bind(String item) {
-                mTextView.setText(item);
-            }
-        }
     }
 }
