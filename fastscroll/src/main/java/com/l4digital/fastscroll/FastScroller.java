@@ -337,7 +337,7 @@ public class FastScroller extends LinearLayout {
             }
 
             if (mFastScrollStateChangeListener != null) {
-                mFastScrollStateChangeListener.onFastScrollStart();
+                mFastScrollStateChangeListener.onFastScrollStart(mBubbleView, mScrollbar);
             }
         case MotionEvent.ACTION_MOVE:
             final float y = event.getY();

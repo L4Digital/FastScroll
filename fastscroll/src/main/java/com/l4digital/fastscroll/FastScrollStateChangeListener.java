@@ -16,12 +16,14 @@
 
 package com.l4digital.fastscroll;
 
+import android.view.View;
+
 public interface FastScrollStateChangeListener {
 
     /**
      * Called when fast scrolling begins
      */
-    void onFastScrollStart();
+    void onFastScrollStart(View bubbleView, View scrollView);
 
     /**
      * Called when fast scrolling ends
