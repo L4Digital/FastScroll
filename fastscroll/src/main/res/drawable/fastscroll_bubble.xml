@@ -32,4 +32,8 @@
         android:height="@dimen/fastscroll_bubble_size"
         android:width="@dimen/fastscroll_bubble_size" />
 
+    <padding
+        android:left="@dimen/fastscroll_bubble_padding"
+        android:right="@dimen/fastscroll_bubble_padding" />
+
 </shape>
