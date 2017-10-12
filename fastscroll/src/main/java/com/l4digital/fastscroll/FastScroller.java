@@ -62,7 +62,7 @@ public class FastScroller extends LinearLayout {
 
     private int mBubbleHeight;
     private int mHandleHeight;
-    private int mHeight;
+    private int mViewHeight;
     private boolean mHideScrollbar;
     private SectionIndexer mSectionIndexer;
     private ViewPropertyAnimator mScrollbarAnimator;
@@ -334,6 +334,7 @@ public class FastScroller extends LinearLayout {
                 return false;
             }
 
+            requestDisallowInterceptTouchEvent(true);
             setHandleSelected(true);
 
             getHandler().removeCallbacks(mScrollbarHider);
@@ -349,7 +350,7 @@ public class FastScroller extends LinearLayout {
             }
 
             if (mFastScrollStateChangeListener != null) {
-                mFastScrollStateChangeListener.onFastScrollStart(mBubbleView, mScrollbar);
+                mFastScrollStateChangeListener.onFastScrollStart(this);
             }
         case MotionEvent.ACTION_MOVE:
             final float y = event.getY();
@@ -358,6 +359,7 @@ public class FastScroller extends LinearLayout {
             return true;
         case MotionEvent.ACTION_UP:
         case MotionEvent.ACTION_CANCEL:
+            requestDisallowInterceptTouchEvent(false);
             setHandleSelected(false);
 
             if (mHideScrollbar) {
@@ -369,7 +371,7 @@ public class FastScroller extends LinearLayout {
             }
 
             if (mFastScrollStateChangeListener != null) {
-                mFastScrollStateChangeListener.onFastScrollStop();
+                mFastScrollStateChangeListener.onFastScrollStop(this);
             }
 
             return true;
@@ -381,7 +383,7 @@ public class FastScroller extends LinearLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mHeight = h;
+        mViewHeight = h;
     }
 
     private void setRecyclerViewPosition(float y) {
@@ -391,10 +393,10 @@ public class FastScroller extends LinearLayout {
 
             if (mHandleView.getY() == 0) {
                 proportion = 0f;
-            } else if (mHandleView.getY() + mHandleView.getHeight() >= mHeight - sTrackSnapRange) {
+            } else if (mHandleView.getY() + mHandleHeight >= mViewHeight - sTrackSnapRange) {
                 proportion = 1f;
             } else {
-                proportion = y / (float) mHeight;
+                proportion = y / (float) mViewHeight;
             }
 
             int targetPos = getValueInRange(0, itemCount - 1, (int) (proportion * (float) itemCount));
@@ -409,9 +411,9 @@ public class FastScroller extends LinearLayout {
     private float getScrollProportion(RecyclerView recyclerView) {
         final int verticalScrollOffset = recyclerView.computeVerticalScrollOffset();
         final int verticalScrollRange = recyclerView.computeVerticalScrollRange();
-        final float rangeDiff = verticalScrollRange - mHeight;
+        final float rangeDiff = verticalScrollRange - mViewHeight;
         float proportion = (float) verticalScrollOffset / (rangeDiff > 0 ? rangeDiff : 1f);
-        return mHeight * proportion;
+        return mViewHeight * proportion;
     }
 
     private int getValueInRange(int min, int max, int value) {
@@ -420,8 +422,8 @@ public class FastScroller extends LinearLayout {
     }
 
     private void setViewPositions(float y) {
-        int bubbleY = getValueInRange(0, mHeight - mBubbleHeight - mHandleHeight / 2, (int) (y - mBubbleHeight));
-        int handleY = getValueInRange(0, mHeight - mHandleHeight, (int) (y - mHandleHeight / 2));
+        int bubbleY = getValueInRange(0, mViewHeight - mBubbleHeight - mHandleHeight / 2, (int) (y - mBubbleHeight));
+        int handleY = getValueInRange(0, mViewHeight - mHandleHeight, (int) (y - mHandleHeight / 2));
 
         mBubbleView.setY(bubbleY);
         mHandleView.setY(handleY);
@@ -468,7 +470,7 @@ public class FastScroller extends LinearLayout {
     }
 
     private void showScrollbar() {
-        if (mRecyclerView.computeVerticalScrollRange() - mHeight > 0) {
+        if (mRecyclerView.computeVerticalScrollRange() - mViewHeight > 0) {
             float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding_end);
 
             mScrollbar.setTranslationX(transX);
@@ -524,9 +526,9 @@ public class FastScroller extends LinearLayout {
         setClipChildren(false);
         setOrientation(HORIZONTAL);
 
-        mBubbleView = (TextView) findViewById(R.id.fastscroll_bubble);
-        mHandleView = (ImageView) findViewById(R.id.fastscroll_handle);
-        mTrackView = (ImageView) findViewById(R.id.fastscroll_track);
+        mBubbleView = findViewById(R.id.fastscroll_bubble);
+        mHandleView = findViewById(R.id.fastscroll_handle);
+        mTrackView = findViewById(R.id.fastscroll_track);
         mScrollbar = findViewById(R.id.fastscroll_scrollbar);
 
         @ColorInt int bubbleColor = Color.GRAY;
