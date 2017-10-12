@@ -25,21 +25,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:gravity="center"
+        android:maxLines="1"
         android:textSize="@dimen/fastscroll_bubble_textsize"
         android:visibility="gone"
         tools:background="@drawable/fastscroll_bubble"
-        tools:visibility="visible"
+        tools:text="A"
         tools:textColor="#ffffff"
-        tools:text="A" />
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/fastscroll_scrollbar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:paddingEnd="@dimen/fastscroll_scrollbar_padding_end"
         android:paddingLeft="@dimen/fastscroll_scrollbar_padding_start"
         android:paddingRight="@dimen/fastscroll_scrollbar_padding_end"
         android:paddingStart="@dimen/fastscroll_scrollbar_padding_start"
-        android:paddingEnd="@dimen/fastscroll_scrollbar_padding_end"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -48,16 +49,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            tools:src="@drawable/fastscroll_track"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/fastscroll_track" />
 
         <ImageView
             android:id="@+id/fastscroll_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            tools:src="@drawable/fastscroll_handle"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/fastscroll_handle" />
 
     </FrameLayout>
 

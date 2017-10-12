@@ -60,6 +60,8 @@ public class FastScroller extends LinearLayout {
     @ColorInt private int mBubbleColor;
     @ColorInt private int mHandleColor;
 
+    private int mBubbleHeight;
+    private int mHandleHeight;
     private int mHeight;
     private boolean mHideScrollbar;
     private SectionIndexer mSectionIndexer;
@@ -143,7 +145,7 @@ public class FastScroller extends LinearLayout {
     }
 
     public void setLayoutParams(@NonNull ViewGroup viewGroup) {
-        @IdRes int recyclerViewId = mRecyclerView.getId();
+        @IdRes int recyclerViewId = mRecyclerView != null ? mRecyclerView.getId() : NO_ID;
         int marginTop = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_top);
         int marginBottom = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_bottom);
 
@@ -193,6 +195,8 @@ public class FastScroller extends LinearLayout {
         } else {
             throw new IllegalArgumentException("Parent ViewGroup must be a ConstraintLayout, CoordinatorLayout, FrameLayout, or RelativeLayout");
         }
+
+        updateViewHeights();
     }
 
     public void setSectionIndexer(SectionIndexer sectionIndexer) {
@@ -204,6 +208,14 @@ public class FastScroller extends LinearLayout {
 
         if (mRecyclerView != null) {
             mRecyclerView.addOnScrollListener(mScrollListener);
+            post(new Runnable() {
+
+                @Override
+                public void run() {
+                    // set initial positions for bubble and handle
+                    setViewPositions(getScrollProportion(mRecyclerView));
+                }
+            });
         }
     }
 
@@ -408,11 +420,11 @@ public class FastScroller extends LinearLayout {
     }
 
     private void setViewPositions(float y) {
-        int bubbleHeight = mBubbleView.getHeight();
-        int handleHeight = mHandleView.getHeight();
+        int bubbleY = getValueInRange(0, mHeight - mBubbleHeight - mHandleHeight / 2, (int) (y - mBubbleHeight));
+        int handleY = getValueInRange(0, mHeight - mHandleHeight, (int) (y - mHandleHeight / 2));
 
-        mBubbleView.setY(getValueInRange(0, mHeight - bubbleHeight - handleHeight / 2, (int) (y - bubbleHeight)));
-        mHandleView.setY(getValueInRange(0, mHeight - handleHeight, (int) (y - handleHeight / 2)));
+        mBubbleView.setY(bubbleY);
+        mHandleView.setY(handleY);
     }
 
     private boolean isViewVisible(View view) {
@@ -495,6 +507,15 @@ public class FastScroller extends LinearLayout {
     private void setHandleSelected(boolean selected) {
         mHandleView.setSelected(selected);
         DrawableCompat.setTint(mHandleImage, selected ? mBubbleColor : mHandleColor);
+    }
+
+    private void updateViewHeights() {
+        int measureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+
+        mBubbleView.measure(measureSpec, measureSpec);
+        mBubbleHeight = mBubbleView.getMeasuredHeight();
+        mHandleView.measure(measureSpec, measureSpec);
+        mHandleHeight = mHandleView.getMeasuredHeight();
     }
 
     private void layout(Context context, AttributeSet attrs) {
