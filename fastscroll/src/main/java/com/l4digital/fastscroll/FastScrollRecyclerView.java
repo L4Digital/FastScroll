@@ -31,7 +31,7 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     public FastScrollRecyclerView(Context context) {
         super(context);
-        layout(context, null);
+        prepareLayout(context, null);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -41,7 +41,7 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     public FastScrollRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        layout(context, attrs);
+        prepareLayout(context, attrs);
     }
 
     @Override
@@ -156,8 +156,9 @@ public class FastScrollRecyclerView extends RecyclerView {
         super.onDetachedFromWindow();
     }
 
-    private void layout(Context context, AttributeSet attrs) {
+    protected void prepareLayout(Context context, AttributeSet attrs) {
         mFastScroller = new FastScroller(context, attrs);
         mFastScroller.setId(R.id.fastscroller);
     }
+
 }

@@ -30,7 +30,15 @@ public class ExampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_example);
 
         FastScrollRecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ExampleAdapter());
+
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        //GridLayoutManager manager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+        manager.setStackFromEnd(false);
+
+        ExampleAdapter adapter = new ExampleAdapter();
+
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
     }
+
 }

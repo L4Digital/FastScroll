@@ -33,7 +33,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,11 +48,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class FastScroller extends LinearLayout {
+public final class FastScroller extends LinearLayout {
 
     public interface SectionIndexer {
 
         String getSectionText(int position);
+
     }
 
     private static final int sBubbleAnimDuration = 100;
@@ -84,6 +88,7 @@ public class FastScroller extends LinearLayout {
         public void run() {
             hideScrollbar();
         }
+
     };
 
     private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
@@ -120,11 +125,12 @@ public class FastScroller extends LinearLayout {
                 }
             }
         }
+
     };
 
     public FastScroller(Context context) {
         super(context);
-        layout(context, null);
+        prepareLayout(context, null);
         setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
@@ -134,7 +140,7 @@ public class FastScroller extends LinearLayout {
 
     public FastScroller(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        layout(context, attrs);
+        prepareLayout(context, attrs);
         setLayoutParams(generateLayoutParams(attrs));
     }
 
@@ -145,11 +151,11 @@ public class FastScroller extends LinearLayout {
     }
 
     public void setLayoutParams(@NonNull ViewGroup viewGroup) {
-        @IdRes int recyclerViewId = mRecyclerView != null ? mRecyclerView.getId() : NO_ID;
+        @IdRes int recyclerViewId = mRecyclerView != null ? mRecyclerView.getId() : View.NO_ID;
         int marginTop = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_top);
         int marginBottom = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_bottom);
 
-        if (recyclerViewId == NO_ID) {
+        if (recyclerViewId == View.NO_ID) {
             throw new IllegalArgumentException("RecyclerView must have a view ID");
         }
 
@@ -215,6 +221,7 @@ public class FastScroller extends LinearLayout {
                     // set initial positions for bubble and handle
                     setViewPositions(getScrollProportion(mRecyclerView));
                 }
+
             });
         }
     }
@@ -381,8 +388,8 @@ public class FastScroller extends LinearLayout {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
         mViewHeight = h;
     }
 
@@ -399,7 +406,16 @@ public class FastScroller extends LinearLayout {
                 proportion = y / (float) mViewHeight;
             }
 
-            int targetPos = getValueInRange(0, itemCount - 1, (int) (proportion * (float) itemCount));
+            int scrolledItemCount;
+
+            if (isLayoutReversed(mRecyclerView.getLayoutManager())) {
+                scrolledItemCount = itemCount - Math.round(proportion * itemCount);
+            } else {
+                scrolledItemCount = Math.round(proportion * itemCount);
+            }
+
+            int targetPos = getValueInRange(0, itemCount - 1, scrolledItemCount);
+
             mRecyclerView.getLayoutManager().scrollToPosition(targetPos);
 
             if (mSectionIndexer != null) {
@@ -466,6 +482,7 @@ public class FastScroller extends LinearLayout {
                         mBubbleView.setVisibility(GONE);
                         mBubbleAnimator = null;
                     }
+
                 });
     }
 
@@ -503,6 +520,7 @@ public class FastScroller extends LinearLayout {
                         mScrollbar.setVisibility(GONE);
                         mScrollbarAnimator = null;
                     }
+
                 });
     }
 
@@ -520,7 +538,22 @@ public class FastScroller extends LinearLayout {
         mHandleHeight = mHandleView.getMeasuredHeight();
     }
 
-    private void layout(Context context, AttributeSet attrs) {
+    private boolean isLayoutReversed(@NonNull final RecyclerView.LayoutManager layoutManager) {
+        if (layoutManager instanceof StaggeredGridLayoutManager) {
+            return ((StaggeredGridLayoutManager) layoutManager).getReverseLayout();
+
+        } else if (layoutManager instanceof GridLayoutManager) {
+            return ((GridLayoutManager) layoutManager).getReverseLayout();
+
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager).getReverseLayout();
+
+        } else {
+            return false;
+        }
+    }
+
+    private void prepareLayout(Context context, AttributeSet attrs) {
         inflate(context, R.layout.fastscroller, this);
 
         setClipChildren(false);
@@ -563,4 +596,5 @@ public class FastScroller extends LinearLayout {
         setHideScrollbar(hideScrollbar);
         setTrackVisible(showTrack);
     }
+
 }

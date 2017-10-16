@@ -29,6 +29,8 @@ import java.util.List;
 
 public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHolder> implements FastScroller.SectionIndexer {
 
+    private static final int ITEMS_PER_LETTER = 15;
+
     private final List<String> mItemList;
 
     public ExampleAdapter() {
@@ -36,7 +38,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHold
 
         for (int i = 0; i < 26; i++) {
             // add several items for each letter in the alphabet
-            for (int x = 0; x < 5; x++) {
+            for (int x = 0; x < ExampleAdapter.ITEMS_PER_LETTER; x++) {
                 mItemList.add(Character.toString((char) (65 + i)) + " example item");
             }
         }
@@ -67,13 +69,15 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHold
 
         private TextView mTextView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             mTextView = (TextView) itemView;
         }
 
-        public void bind(String item) {
+        void bind(String item) {
             mTextView.setText(item);
         }
+
     }
+
 }
