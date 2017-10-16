@@ -160,4 +160,5 @@ public class FastScrollRecyclerView extends RecyclerView {
         mFastScroller = new FastScroller(context, attrs);
         mFastScroller.setId(R.id.fastscroller);
     }
+
 }

@@ -33,7 +33,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -381,8 +384,8 @@ public class FastScroller extends LinearLayout {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
         mViewHeight = h;
     }
 
@@ -399,7 +402,16 @@ public class FastScroller extends LinearLayout {
                 proportion = y / (float) mViewHeight;
             }
 
-            int targetPos = getValueInRange(0, itemCount - 1, (int) (proportion * (float) itemCount));
+            int scrolledItemCount;
+
+            if (isLayoutReversed(mRecyclerView.getLayoutManager())) {
+                scrolledItemCount = itemCount - Math.round(proportion * itemCount);
+            } else {
+                scrolledItemCount = Math.round(proportion * itemCount);
+            }
+
+            int targetPos = getValueInRange(0, itemCount - 1, scrolledItemCount);
+
             mRecyclerView.getLayoutManager().scrollToPosition(targetPos);
 
             if (mSectionIndexer != null) {
@@ -480,6 +492,10 @@ public class FastScroller extends LinearLayout {
                     .setListener(new AnimatorListenerAdapter() {
                         // adapter required for new alpha value to stick
                     });
+
+            if (isLayoutReversed(mRecyclerView.getLayoutManager())) {
+                setViewPositions(mRecyclerView.getBottom());
+            }
         }
     }
 
@@ -563,4 +579,20 @@ public class FastScroller extends LinearLayout {
         setHideScrollbar(hideScrollbar);
         setTrackVisible(showTrack);
     }
+
+    private boolean isLayoutReversed(@NonNull final RecyclerView.LayoutManager layoutManager) {
+        if (layoutManager instanceof StaggeredGridLayoutManager) {
+            return ((StaggeredGridLayoutManager) layoutManager).getReverseLayout();
+
+        } else if (layoutManager instanceof GridLayoutManager) {
+            return ((GridLayoutManager) layoutManager).getReverseLayout();
+
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager).getReverseLayout();
+
+        } else {
+            return false;
+        }
+    }
+
 }
