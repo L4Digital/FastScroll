@@ -22,16 +22,18 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.Interpolator;
 
 import com.l4digital.fastscroll.FastScroller.SectionIndexer;
 
+@SuppressWarnings("unused, WeakerAccess")
 public class FastScrollRecyclerView extends RecyclerView {
 
     private FastScroller mFastScroller;
 
     public FastScrollRecyclerView(Context context) {
         super(context);
-        layout(context, null);
+        prepareLayout(context, null);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
@@ -41,7 +43,7 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     public FastScrollRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        layout(context, attrs);
+        prepareLayout(context, attrs);
     }
 
     @Override
@@ -53,6 +55,30 @@ public class FastScrollRecyclerView extends RecyclerView {
         } else if (adapter == null) {
             setSectionIndexer(null);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>If fast scrolling is enabled the scroll handle should be shown, when smooth scrolling to a given position in order to provide
+     * additional visual feedback.</p>
+     */
+    @Override
+    public void smoothScrollToPosition(int position) {
+        startFastScroll();
+        super.smoothScrollToPosition(position);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>If fast scrolling is enabled the scroll handle should be shown, when smooth scrolling to the specified location in order to
+     * provide additional visual feedback.</p>
+     */
+    @Override
+    public void smoothScrollBy(int dx, int dy, Interpolator interpolator) {
+        startFastScroll();
+        super.smoothScrollBy(dx, dy, interpolator);
     }
 
     /**
@@ -74,21 +100,54 @@ public class FastScrollRecyclerView extends RecyclerView {
     }
 
     /**
+     * Check if the state of fast scrolling is enabled.
+     *
+     * @return True when enabled and false when disabled
+     */
+    public boolean isFastScrollEnabled() {
+        return mFastScroller.isEnabled();
+    }
+
+    /**
+     * <p>Manually start fast scrolling behavior and show related visual components. Only the handle and the scrollbar will showed when allowed.</p>
+     *
+     * <p>Only works if fast scrolling is enabled ({@link FastScrollRecyclerView#isFastScrollEnabled()} {@code returns "true"}) to begin with.</p>
+     *
+     * <p>Can be used when additional visual feedback is need for an action performed by an external source.</p>
+     */
+    public void startFastScroll() {
+        if (mFastScroller.isEnabled()) {
+            mFastScroller.startFastScroll();
+        }
+    }
+
+    /**
+     * <p>Manually stop fast scrolling behavior and hide any visible visual components.</p>
+     *
+     * <p>Only works if fast scrolling is enabled ({@link FastScrollRecyclerView#isFastScrollEnabled()} {@code returns "true"}) to begin with.</p>
+     */
+    public void stopFastScroll() {
+        if (mFastScroller.isEnabled()) {
+            mFastScroller.stopFastScroll();
+        }
+    }
+
+    /**
      * Hide the scrollbar when not scrolling.
      *
-     * @param hideScrollbar True to hide the scrollbar, false to show
+     * @param isHidden True to hide the scrollbar, false to show
      */
-    public void setHideScrollbar(boolean hideScrollbar) {
-        mFastScroller.setHideScrollbar(hideScrollbar);
+    public void setHideScrollbar(boolean isHidden) {
+        mFastScroller.setHideScrollbar(isHidden);
     }
 
     /**
      * Display a scroll track while scrolling.
      *
-     * @param visible True to show scroll track, false to hide
+     * @param isVisible True to show scroll track, false to hide
      */
-    public void setTrackVisible(boolean visible) {
-        mFastScroller.setTrackVisible(visible);
+    public void setTrackVisible(boolean isVisible) {
+        mFastScroller.setTrackVisible(isVisible);
     }
 
     /**
@@ -156,8 +215,9 @@ public class FastScrollRecyclerView extends RecyclerView {
         super.onDetachedFromWindow();
     }
 
-    private void layout(Context context, AttributeSet attrs) {
+    protected void prepareLayout(Context context, AttributeSet attrs) {
         mFastScroller = new FastScroller(context, attrs);
         mFastScroller.setId(R.id.fastscroller);
     }
+
 }

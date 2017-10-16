@@ -19,18 +19,77 @@ package com.l4digital.fastscroll.example;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.l4digital.fastscroll.FastScrollRecyclerView;
 
 public class ExampleActivity extends AppCompatActivity {
+
+    FastScrollRecyclerView mRecyclerView;
+    LinearLayoutManager mManager;
+    //GridLayoutManager mManager;
+    ExampleAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example);
 
-        FastScrollRecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ExampleAdapter());
+        mRecyclerView = findViewById(R.id.recycler_view);
+
+        mManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        // mManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+        mManager.setStackFromEnd(false);
+
+        mAdapter = new ExampleAdapter();
+
+        mRecyclerView.setLayoutManager(mManager);
+        mRecyclerView.setAdapter(mAdapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    // TODO: replace the hardcoded Strings at some point.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_show_fast_scroll:
+                Toast.makeText(this, "Showing FastScroll...", Toast.LENGTH_SHORT).show();
+
+                mRecyclerView.startFastScroll();
+                return true;
+
+            case R.id.action_hide_fast_scroll:
+                Toast.makeText(this, "Hiding FastScroll...", Toast.LENGTH_SHORT).show();
+
+                mRecyclerView.stopFastScroll();
+                return true;
+
+            case R.id.action_scroll_to:
+                Toast.makeText(this, "Scrolling to position 25...", Toast.LENGTH_SHORT).show();
+
+                mRecyclerView.smoothScrollToPosition(25);
+                return true;
+
+            case R.id.action_reverse_layout:
+                Toast.makeText(this, "Reversing the layout", Toast.LENGTH_SHORT).show();
+
+                mManager.setReverseLayout(!mManager.getReverseLayout());
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

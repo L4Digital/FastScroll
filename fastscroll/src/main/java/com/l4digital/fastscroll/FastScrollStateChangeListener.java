@@ -16,15 +16,21 @@
 
 package com.l4digital.fastscroll;
 
+@SuppressWarnings("unused, WeakerAccess")
 public interface FastScrollStateChangeListener {
 
     /**
-     * Called when fast scrolling begins
+     * Called when fast scrolling begins.
+     *
+     * @param fastScroller The instance of the FastScroller that was started
      */
     void onFastScrollStart(FastScroller fastScroller);
 
     /**
-     * Called when fast scrolling ends
+     * Called when fast scrolling ends.
+     *
+     * @param fastScroller The instance of the FastScroller that was stopped
      */
     void onFastScrollStop(FastScroller fastScroller);
+
 }
