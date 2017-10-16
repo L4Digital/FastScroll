@@ -327,6 +327,36 @@ public final class FastScroller extends LinearLayout {
         mFastScrollStateChangeListener = fastScrollStateChangeListener;
     }
 
+    /** Start fast scrolling behavior and show related visual components. **/
+    public void startFastScroll() {
+        getHandler().removeCallbacks(mScrollbarHider);
+        cancelAnimation(mScrollbarAnimator);
+        cancelAnimation(mBubbleAnimator);
+
+        if (!isViewVisible(mScrollbar)) {
+            showScrollbar();
+        }
+
+        if (mFastScrollStateChangeListener != null) {
+            mFastScrollStateChangeListener.onFastScrollStart(this);
+        }
+    }
+
+    /** Stop fast scrolling behavior and hide any visible visual components. **/
+    public void stopFastScroll() {
+        if (mHideScrollbar) {
+            getHandler().postDelayed(mScrollbarHider, sScrollbarHideDelay);
+        }
+
+        if (isViewVisible(mBubbleView)) {
+            hideBubble();
+        }
+
+        if (mFastScrollStateChangeListener != null) {
+            mFastScrollStateChangeListener.onFastScrollStop(this);
+        }
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -375,34 +405,6 @@ public final class FastScroller extends LinearLayout {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         mViewHeight = h;
-    }
-
-    void startFastScroll() {
-        getHandler().removeCallbacks(mScrollbarHider);
-        cancelAnimation(mScrollbarAnimator);
-        cancelAnimation(mBubbleAnimator);
-
-        if (!isViewVisible(mScrollbar)) {
-            showScrollbar();
-        }
-
-        if (mFastScrollStateChangeListener != null) {
-            mFastScrollStateChangeListener.onFastScrollStart(this);
-        }
-    }
-
-    void stopFastScroll() {
-        if (mHideScrollbar) {
-            getHandler().postDelayed(mScrollbarHider, sScrollbarHideDelay);
-        }
-
-        if (isViewVisible(mBubbleView)) {
-            hideBubble();
-        }
-
-        if (mFastScrollStateChangeListener != null) {
-            mFastScrollStateChangeListener.onFastScrollStop(this);
-        }
     }
 
     private void setRecyclerViewPosition(float y) {
