@@ -40,6 +40,6 @@ android {
 }
 
 dependencies {
-    compile project(':fastscroll')
-    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation project(':fastscroll')
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
 }

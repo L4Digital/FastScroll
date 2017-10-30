@@ -39,9 +39,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "com.android.support:design:$supportLibVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibVersion"
+    api 'com.android.support.constraint:constraint-layout:1.0.2'
+    api "com.android.support:design:$supportLibVersion"
+    api "com.android.support:recyclerview-v7:$supportLibVersion"
 }
 
 task sourcesJar(type: Jar) {
@@ -73,7 +73,7 @@ publishing {
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
 
-                configurations.getByName("_releaseCompile").allDependencies.each {
+                configurations.getByName("releaseApi").allDependencies.each {
                     def dependency = dependencies.appendNode('dependency')
 
                     dependency.appendNode('groupId', it.group)

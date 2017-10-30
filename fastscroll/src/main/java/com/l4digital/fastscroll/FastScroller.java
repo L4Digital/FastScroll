@@ -33,7 +33,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -399,7 +401,13 @@ public class FastScroller extends LinearLayout {
                 proportion = y / (float) mViewHeight;
             }
 
-            int targetPos = getValueInRange(0, itemCount - 1, (int) (proportion * (float) itemCount));
+            int scrolledItemCount = Math.round(proportion * itemCount);
+
+            if (isLayoutReversed(mRecyclerView.getLayoutManager())) {
+                scrolledItemCount = itemCount - scrolledItemCount;
+            }
+
+            int targetPos = getValueInRange(0, itemCount - 1, scrolledItemCount);
             mRecyclerView.getLayoutManager().scrollToPosition(targetPos);
 
             if (mSectionIndexer != null) {
@@ -427,6 +435,16 @@ public class FastScroller extends LinearLayout {
 
         mBubbleView.setY(bubbleY);
         mHandleView.setY(handleY);
+    }
+
+    private boolean isLayoutReversed(@NonNull final RecyclerView.LayoutManager layoutManager) {
+        if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager).getReverseLayout();
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            return ((StaggeredGridLayoutManager) layoutManager).getReverseLayout();
+        }
+
+        return false;
     }
 
     private boolean isViewVisible(View view) {
