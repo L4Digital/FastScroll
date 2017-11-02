@@ -1,7 +1,7 @@
 # FastScroll
 [![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html)
-[![Download](https://img.shields.io/badge/JCenter-1.0.4-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
+[![Download](https://img.shields.io/badge/JCenter-1.1.0-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
 
 A ListView-like FastScroller for Android’s RecyclerView.
 
@@ -18,7 +18,7 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 #### Gradle:
 ~~~groovy
 dependencies {
-    compile 'com.l4digital.fastscroll:fastscroll:1.0.4'
+    compile 'com.l4digital.fastscroll:fastscroll:1.1.0'
 }
 ~~~
 
@@ -27,7 +27,7 @@ dependencies {
 <dependency>
   <groupId>com.l4digital.fastscroll</groupId>
   <artifactId>fastscroll</artifactId>
-  <version>1.0.4</version>
+  <version>1.1.0</version>
 </dependency>
 ~~~
 
@@ -41,7 +41,7 @@ dependencies {
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    FastScrollRecyclerView recyclerView = (FastScrollRecyclerView) findViewById(R.id.recycler_view);
+    FastScrollRecyclerView recyclerView = findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setAdapter(new ExampleAdapter());
 }
@@ -85,6 +85,9 @@ class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHolder> imp
     }
 }
 ~~~
+
+#### Alternative Usage:
+If you are unable to use the `FastScrollRecyclerView`, you can add a `FastScroller` to your layout and implement with any `RecyclerView`. See this [github issue](https://github.com/L4Digital/FastScroll/issues/4#issuecomment-256975634) for an example.
 
 
 
