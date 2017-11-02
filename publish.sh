@@ -1,6 +1,2 @@
-./gradlew \
-    clean \
-    assembleRelease \
-    generateArchives \
-    generatePomFileForAarPublication \
-    bintrayUpload
+./build.sh
+./gradlew bintrayUpload

@@ -68,12 +68,12 @@ publishing {
             version = libraryVersion
             artifactId = libraryArtifact
 
-            artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
+            artifact("$buildDir/outputs/aar/$artifactId-release.aar")
 
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
 
-                configurations.getByName("releaseApi").allDependencies.each {
+                configurations.getByName("api").allDependencies.each {
                     def dependency = dependencies.appendNode('dependency')
 
                     dependency.appendNode('groupId', it.group)
