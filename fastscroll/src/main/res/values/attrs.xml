@@ -17,7 +17,7 @@
 
 <resources>
 
-    <declare-styleable name="FastScrollRecyclerView">
+    <declare-styleable name="FastScroller">
         <attr name="hideScrollbar" format="boolean" />
         <attr name="showTrack" format="boolean" />
         <attr name="trackColor" format="color" />
