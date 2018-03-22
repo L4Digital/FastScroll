@@ -161,6 +161,7 @@ public class FastScroller extends LinearLayout {
             ConstraintSet constraintSet = new ConstraintSet();
             @IdRes int layoutId = getId();
 
+            constraintSet.clone((ConstraintLayout) viewGroup);
             constraintSet.connect(layoutId, ConstraintSet.TOP, recyclerViewId, ConstraintSet.TOP);
             constraintSet.connect(layoutId, ConstraintSet.BOTTOM, recyclerViewId, ConstraintSet.BOTTOM);
             constraintSet.connect(layoutId, ConstraintSet.END, recyclerViewId, ConstraintSet.END);
