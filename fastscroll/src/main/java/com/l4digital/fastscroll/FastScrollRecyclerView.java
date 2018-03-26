@@ -25,6 +25,7 @@ import android.view.ViewParent;
 
 import com.l4digital.fastscroll.FastScroller.SectionIndexer;
 
+@SuppressWarnings("unused")
 public class FastScrollRecyclerView extends RecyclerView {
 
     private FastScroller mFastScroller;

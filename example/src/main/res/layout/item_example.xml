@@ -21,5 +21,6 @@
     android:layout_height="56dp"
     android:background="?selectableItemBackground"
     android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:padding="16dp" />
