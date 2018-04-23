@@ -56,6 +56,12 @@ public class FastScrollRecyclerView extends RecyclerView {
         }
     }
 
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        mFastScroller.setVisibility(visibility);
+    }
+
     /**
      * Set the {@link SectionIndexer} for the {@link FastScroller}.
      *
@@ -108,6 +114,15 @@ public class FastScrollRecyclerView extends RecyclerView {
      */
     public void setHandleColor(@ColorInt int color) {
         mFastScroller.setHandleColor(color);
+    }
+
+    /**
+     * Show the section bubble while scrolling.
+     *
+     * @param visible True to show the bubble, false to hide
+     */
+    public void setBubbleVisible(boolean visible) {
+        mFastScroller.setBubbleVisible(visible);
     }
 
     /**
