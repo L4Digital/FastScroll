@@ -27,6 +27,18 @@ lint_test:
   script:
     - ./gradlew lintRelease
 
+merge_build:
+  stage: build
+  except:
+    - schedules
+    - web
+    - tags
+    - master
+  tags:
+    - docker
+  script:
+    - ./gradlew assembleRelease
+
 release_build:
   stage: build
   only:
@@ -42,16 +54,4 @@ release_build:
       - fastscroll/build/publications/aar/
   script:
     - ./gradlew generatePomFileForAarPublication
-    - ./gradlew assembleRelease
-
-merge_build:
-  stage: build
-  except:
-    - schedules
-    - web
-    - tags
-    - master
-  tags:
-    - docker
-  script:
     - ./gradlew assembleRelease
