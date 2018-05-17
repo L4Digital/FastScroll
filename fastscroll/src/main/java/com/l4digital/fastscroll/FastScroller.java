@@ -434,7 +434,24 @@ public class FastScroller extends LinearLayout {
             mRecyclerView.getLayoutManager().scrollToPosition(targetPos);
 
             if (mShowBubble && mSectionIndexer != null) {
-                mBubbleView.setText(mSectionIndexer.getSectionText(targetPos));
+                final int bubblePosition;
+                if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                    final LinearLayoutManager layoutManager = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
+                    final int firstVisible = layoutManager.findFirstVisibleItemPosition();
+                    final int lastVisible = layoutManager.findLastVisibleItemPosition();
+                    int position = -1;
+                    for (int i = firstVisible; i <= lastVisible; ++i) {
+                        final View view = layoutManager.findViewByPosition(i);
+                        if (view.getY() >= mBubbleView.getY()) {
+                            position = i;
+                            break;
+                        }
+                    }
+                    bubblePosition = position < 0 ? targetPos : position;
+                } else {
+                    bubblePosition = targetPos;
+                }
+                mBubbleView.setText(mSectionIndexer.getSectionText(bubblePosition));
             }
         }
     }
