@@ -52,7 +52,7 @@ public class FastScroller extends LinearLayout {
 
     public interface SectionIndexer {
 
-        String getSectionText(int position);
+        CharSequence getSectionText(int position);
     }
 
     private static final int sBubbleAnimDuration = 100;
