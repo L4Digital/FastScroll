@@ -15,13 +15,16 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
 def libraryName = 'FastScroll'
 def libraryArtifact = 'fastscroll'
 def libraryGroup = 'com.l4digital.fastscroll'
 def libraryVersion = '1.1.1'
+
+repositories {
+    google()
+}
 
 android {
     compileSdkVersion rootProject.ext.sdkVersion
@@ -103,26 +106,6 @@ publishing {
 
             artifact sourcesJar
             artifact javadocJar
-        }
-    }
-}
-
-bintray {
-    user = project.findProperty("bintray_user") ?: ""
-    key = project.findProperty("bintray_apikey") ?: ""
-
-    publications = ['aar', 'java']
-
-    pkg {
-        name = libraryName
-        repo = 'maven'
-        userOrg = 'l4digital'
-        licenses = ['Apache-2.0']
-
-        version {
-            name = libraryVersion
-            vcsTag = libraryVersion
-            released = new Date()
         }
     }
 }
