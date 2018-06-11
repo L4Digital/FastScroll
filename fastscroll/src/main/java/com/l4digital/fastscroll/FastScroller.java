@@ -440,6 +440,10 @@ public class FastScroller extends LinearLayout {
     }
 
     private float getScrollProportion(RecyclerView recyclerView) {
+        if (recyclerView == null) {
+            return 0;
+        }
+
         final int verticalScrollOffset = recyclerView.computeVerticalScrollOffset();
         final int verticalScrollRange = recyclerView.computeVerticalScrollRange();
         final float rangeDiff = verticalScrollRange - mViewHeight;
