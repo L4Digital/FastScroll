@@ -458,6 +458,9 @@ public class FastScroller extends LinearLayout {
     }
 
     private void setViewPositions(float y) {
+        mBubbleHeight = mBubbleView.getHeight();
+        mHandleHeight = mHandleView.getHeight();
+
         int bubbleY = getValueInRange(0, mViewHeight - mBubbleHeight - mHandleHeight / 2, (int) (y - mBubbleHeight));
         int handleY = getValueInRange(0, mViewHeight - mHandleHeight, (int) (y - mHandleHeight / 2));
 
@@ -466,6 +469,15 @@ public class FastScroller extends LinearLayout {
         }
 
         mHandleView.setY(handleY);
+    }
+
+    private void updateViewHeights() {
+        int measureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+
+        mBubbleView.measure(measureSpec, measureSpec);
+        mBubbleHeight = mBubbleView.getMeasuredHeight();
+        mHandleView.measure(measureSpec, measureSpec);
+        mHandleHeight = mHandleView.getMeasuredHeight();
     }
 
     private boolean isLayoutReversed(@NonNull final RecyclerView.LayoutManager layoutManager) {
@@ -562,15 +574,6 @@ public class FastScroller extends LinearLayout {
     private void setHandleSelected(boolean selected) {
         mHandleView.setSelected(selected);
         DrawableCompat.setTint(mHandleImage, selected ? mBubbleColor : mHandleColor);
-    }
-
-    private void updateViewHeights() {
-        int measureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-
-        mBubbleView.measure(measureSpec, measureSpec);
-        mBubbleHeight = mBubbleView.getMeasuredHeight();
-        mHandleView.measure(measureSpec, measureSpec);
-        mHandleHeight = mHandleView.getMeasuredHeight();
     }
 
     @SuppressWarnings("ConstantConditions")
