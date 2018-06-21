@@ -27,6 +27,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.CoordinatorLayout;
@@ -55,34 +56,34 @@ public class FastScroller extends LinearLayout {
         String getSectionText(int position);
     }
 
-    private static final int sBubbleAnimDuration = 100;
-    private static final int sScrollbarAnimDuration = 300;
-    private static final int sScrollbarHideDelay = 1000;
-    private static final int sTrackSnapRange = 5;
+    private static final int BUBBLE_ANIM_DURATION = 100;
+    private static final int SCROLLBAR_ANIM_DURATION = 300;
+    private static final int SCROLLBAR_HIDE_DELAY = 1000;
+    private static final int TRACK_SNAP_RANGE = 5;
 
-    @ColorInt private int mBubbleColor;
-    @ColorInt private int mHandleColor;
+    @ColorInt private int bubbleColor;
+    @ColorInt private int handleColor;
 
-    private int mBubbleHeight;
-    private int mHandleHeight;
-    private int mViewHeight;
-    private boolean mHideScrollbar;
-    private boolean mShowBubble;
-    private SectionIndexer mSectionIndexer;
-    private ViewPropertyAnimator mScrollbarAnimator;
-    private ViewPropertyAnimator mBubbleAnimator;
-    private RecyclerView mRecyclerView;
-    private TextView mBubbleView;
-    private ImageView mHandleView;
-    private ImageView mTrackView;
-    private View mScrollbar;
-    private Drawable mBubbleImage;
-    private Drawable mHandleImage;
-    private Drawable mTrackImage;
+    private int bubbleHeight;
+    private int handleHeight;
+    private int viewHeight;
+    private boolean hideScrollbar;
+    private boolean showBubble;
+    private SectionIndexer sectionIndexer;
+    private ViewPropertyAnimator scrollbarAnimator;
+    private ViewPropertyAnimator bubbleAnimator;
+    private RecyclerView recyclerView;
+    private TextView bubbleView;
+    private ImageView handleView;
+    private ImageView trackView;
+    private View scrollbar;
+    private Drawable bubbleImage;
+    private Drawable handleImage;
+    private Drawable trackImage;
 
-    private FastScrollStateChangeListener mFastScrollStateChangeListener;
+    private FastScrollStateChangeListener fastScrollStateChangeListener;
 
-    private Runnable mScrollbarHider = new Runnable() {
+    private Runnable scrollbarHider = new Runnable() {
 
         @Override
         public void run() {
@@ -90,11 +91,11 @@ public class FastScroller extends LinearLayout {
         }
     };
 
-    private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            if (!mHandleView.isSelected() && isEnabled()) {
+            if (!handleView.isSelected() && isEnabled()) {
                 setViewPositions(getScrollProportion(recyclerView));
             }
         }
@@ -106,18 +107,18 @@ public class FastScroller extends LinearLayout {
             if (isEnabled()) {
                 switch (newState) {
                 case RecyclerView.SCROLL_STATE_DRAGGING:
-                    getHandler().removeCallbacks(mScrollbarHider);
-                    cancelAnimation(mScrollbarAnimator);
+                    getHandler().removeCallbacks(scrollbarHider);
+                    cancelAnimation(scrollbarAnimator);
 
-                    if (!isViewVisible(mScrollbar)) {
+                    if (!isViewVisible(scrollbar)) {
                         showScrollbar();
                     }
 
                     break;
 
                 case RecyclerView.SCROLL_STATE_IDLE:
-                    if (mHideScrollbar && !mHandleView.isSelected()) {
-                        getHandler().postDelayed(mScrollbarHider, sScrollbarHideDelay);
+                    if (hideScrollbar && !handleView.isSelected()) {
+                        getHandler().postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY);
                     }
 
                     break;
@@ -126,17 +127,17 @@ public class FastScroller extends LinearLayout {
         }
     };
 
-    public FastScroller(Context context) {
+    public FastScroller(@NonNull Context context) {
         super(context);
         layout(context, null);
         setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
-    public FastScroller(Context context, AttributeSet attrs) {
+    public FastScroller(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FastScroller(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FastScroller(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         layout(context, attrs);
         setLayoutParams(generateLayoutParams(attrs));
@@ -149,7 +150,7 @@ public class FastScroller extends LinearLayout {
     }
 
     public void setLayoutParams(@NonNull ViewGroup viewGroup) {
-        @IdRes int recyclerViewId = mRecyclerView != null ? mRecyclerView.getId() : NO_ID;
+        @IdRes int recyclerViewId = recyclerView != null ? recyclerView.getId() : NO_ID;
         int marginTop = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_top);
         int marginBottom = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_bottom);
 
@@ -204,30 +205,31 @@ public class FastScroller extends LinearLayout {
         updateViewHeights();
     }
 
-    public void setSectionIndexer(SectionIndexer sectionIndexer) {
-        mSectionIndexer = sectionIndexer;
+    public void setSectionIndexer(@Nullable SectionIndexer sectionIndexer) {
+        this.sectionIndexer = sectionIndexer;
     }
 
-    public void attachRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
+    public void attachRecyclerView(@NonNull RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
 
-        if (mRecyclerView != null) {
-            mRecyclerView.addOnScrollListener(mScrollListener);
+        //noinspection ConstantConditions
+        if (this.recyclerView != null) {
+            this.recyclerView.addOnScrollListener(scrollListener);
             post(new Runnable() {
 
                 @Override
                 public void run() {
                     // set initial positions for bubble and handle
-                    setViewPositions(getScrollProportion(mRecyclerView));
+                    setViewPositions(getScrollProportion(FastScroller.this.recyclerView));
                 }
             });
         }
     }
 
     public void detachRecyclerView() {
-        if (mRecyclerView != null) {
-            mRecyclerView.removeOnScrollListener(mScrollListener);
-            mRecyclerView = null;
+        if (recyclerView != null) {
+            recyclerView.removeOnScrollListener(scrollListener);
+            recyclerView = null;
         }
     }
 
@@ -237,8 +239,8 @@ public class FastScroller extends LinearLayout {
      * @param hideScrollbar True to hide the scrollbar, false to show
      */
     public void setHideScrollbar(boolean hideScrollbar) {
-        mHideScrollbar = hideScrollbar;
-        mScrollbar.setVisibility(hideScrollbar ? GONE : VISIBLE);
+        this.hideScrollbar = hideScrollbar;
+        scrollbar.setVisibility(hideScrollbar ? GONE : VISIBLE);
     }
 
     /**
@@ -247,7 +249,7 @@ public class FastScroller extends LinearLayout {
      * @param visible True to show the bubble, false to hide
      */
     public void setBubbleVisible(boolean visible) {
-        mShowBubble = visible;
+        showBubble = visible;
     }
 
     /**
@@ -256,7 +258,7 @@ public class FastScroller extends LinearLayout {
      * @param visible True to show scroll track, false to hide
      */
     public void setTrackVisible(boolean visible) {
-        mTrackView.setVisibility(visible ? VISIBLE : GONE);
+        trackView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     /**
@@ -267,17 +269,17 @@ public class FastScroller extends LinearLayout {
     public void setTrackColor(@ColorInt int color) {
         @ColorInt int trackColor = color;
 
-        if (mTrackImage == null) {
+        if (trackImage == null) {
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.fastscroll_track);
 
             if (drawable != null) {
-                mTrackImage = DrawableCompat.wrap(drawable);
-                mTrackImage.mutate();
+                trackImage = DrawableCompat.wrap(drawable);
+                trackImage.mutate();
             }
         }
 
-        DrawableCompat.setTint(mTrackImage, trackColor);
-        mTrackView.setImageDrawable(mTrackImage);
+        DrawableCompat.setTint(trackImage, trackColor);
+        trackView.setImageDrawable(trackImage);
     }
 
     /**
@@ -286,19 +288,19 @@ public class FastScroller extends LinearLayout {
      * @param color The color for the scroll handle
      */
     public void setHandleColor(@ColorInt int color) {
-        mHandleColor = color;
+        handleColor = color;
 
-        if (mHandleImage == null) {
+        if (handleImage == null) {
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.fastscroll_handle);
 
             if (drawable != null) {
-                mHandleImage = DrawableCompat.wrap(drawable);
-                mHandleImage.mutate();
+                handleImage = DrawableCompat.wrap(drawable);
+                handleImage.mutate();
             }
         }
 
-        DrawableCompat.setTint(mHandleImage, mHandleColor);
-        mHandleView.setImageDrawable(mHandleImage);
+        DrawableCompat.setTint(handleImage, handleColor);
+        handleView.setImageDrawable(handleImage);
     }
 
     /**
@@ -307,24 +309,24 @@ public class FastScroller extends LinearLayout {
      * @param color The background color for the index bubble
      */
     public void setBubbleColor(@ColorInt int color) {
-        mBubbleColor = color;
+        bubbleColor = color;
 
-        if (mBubbleImage == null) {
+        if (bubbleImage == null) {
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.fastscroll_bubble);
 
             if (drawable != null) {
-                mBubbleImage = DrawableCompat.wrap(drawable);
-                mBubbleImage.mutate();
+                bubbleImage = DrawableCompat.wrap(drawable);
+                bubbleImage.mutate();
             }
         }
 
-        DrawableCompat.setTint(mBubbleImage, mBubbleColor);
+        DrawableCompat.setTint(bubbleImage, bubbleColor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mBubbleView.setBackground(mBubbleImage);
+            bubbleView.setBackground(bubbleImage);
         } else {
             //noinspection deprecation
-            mBubbleView.setBackgroundDrawable(mBubbleImage);
+            bubbleView.setBackgroundDrawable(bubbleImage);
         }
     }
 
@@ -334,7 +336,7 @@ public class FastScroller extends LinearLayout {
      * @param color The text color for the index bubble
      */
     public void setBubbleTextColor(@ColorInt int color) {
-        mBubbleView.setTextColor(color);
+        bubbleView.setTextColor(color);
     }
 
     /**
@@ -342,8 +344,8 @@ public class FastScroller extends LinearLayout {
      *
      * @param fastScrollStateChangeListener The interface that will listen to fastscroll state change events
      */
-    public void setFastScrollStateChangeListener(FastScrollStateChangeListener fastScrollStateChangeListener) {
-        mFastScrollStateChangeListener = fastScrollStateChangeListener;
+    public void setFastScrollStateChangeListener(@Nullable FastScrollStateChangeListener fastScrollStateChangeListener) {
+        this.fastScrollStateChangeListener = fastScrollStateChangeListener;
     }
 
     @Override
@@ -354,30 +356,30 @@ public class FastScroller extends LinearLayout {
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-            if (event.getX() < mHandleView.getX() - ViewCompat.getPaddingStart(mHandleView)) {
+            if (event.getX() < handleView.getX() - ViewCompat.getPaddingStart(handleView)) {
                 return false;
             }
 
             requestDisallowInterceptTouchEvent(true);
             setHandleSelected(true);
 
-            getHandler().removeCallbacks(mScrollbarHider);
-            cancelAnimation(mScrollbarAnimator);
-            cancelAnimation(mBubbleAnimator);
+            getHandler().removeCallbacks(scrollbarHider);
+            cancelAnimation(scrollbarAnimator);
+            cancelAnimation(bubbleAnimator);
 
-            if (!isViewVisible(mScrollbar)) {
+            if (!isViewVisible(scrollbar)) {
                 showScrollbar();
             }
 
-            if (mShowBubble && mSectionIndexer != null) {
+            if (showBubble && sectionIndexer != null) {
                 showBubble();
             }
 
-            if (mFastScrollStateChangeListener != null) {
-                mFastScrollStateChangeListener.onFastScrollStart(this);
+            if (fastScrollStateChangeListener != null) {
+                fastScrollStateChangeListener.onFastScrollStart(this);
             }
         case MotionEvent.ACTION_MOVE:
             final float y = event.getY();
@@ -389,14 +391,14 @@ public class FastScroller extends LinearLayout {
             requestDisallowInterceptTouchEvent(false);
             setHandleSelected(false);
 
-            if (mHideScrollbar) {
-                getHandler().postDelayed(mScrollbarHider, sScrollbarHideDelay);
+            if (hideScrollbar) {
+                getHandler().postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY);
             }
 
             hideBubble();
 
-            if (mFastScrollStateChangeListener != null) {
-                mFastScrollStateChangeListener.onFastScrollStop(this);
+            if (fastScrollStateChangeListener != null) {
+                fastScrollStateChangeListener.onFastScrollStop(this);
             }
 
             return true;
@@ -408,33 +410,33 @@ public class FastScroller extends LinearLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mViewHeight = h;
+        viewHeight = h;
     }
 
     private void setRecyclerViewPosition(float y) {
-        if (mRecyclerView != null && mRecyclerView.getAdapter() != null) {
-            int itemCount = mRecyclerView.getAdapter().getItemCount();
+        if (recyclerView != null && recyclerView.getAdapter() != null) {
+            int itemCount = recyclerView.getAdapter().getItemCount();
             float proportion;
 
-            if (mHandleView.getY() == 0) {
+            if (handleView.getY() == 0) {
                 proportion = 0f;
-            } else if (mHandleView.getY() + mHandleHeight >= mViewHeight - sTrackSnapRange) {
+            } else if (handleView.getY() + handleHeight >= viewHeight - TRACK_SNAP_RANGE) {
                 proportion = 1f;
             } else {
-                proportion = y / (float) mViewHeight;
+                proportion = y / (float) viewHeight;
             }
 
             int scrolledItemCount = Math.round(proportion * itemCount);
 
-            if (isLayoutReversed(mRecyclerView.getLayoutManager())) {
+            if (isLayoutReversed(recyclerView.getLayoutManager())) {
                 scrolledItemCount = itemCount - scrolledItemCount;
             }
 
             int targetPos = getValueInRange(0, itemCount - 1, scrolledItemCount);
-            mRecyclerView.getLayoutManager().scrollToPosition(targetPos);
+            recyclerView.getLayoutManager().scrollToPosition(targetPos);
 
-            if (mShowBubble && mSectionIndexer != null) {
-                mBubbleView.setText(mSectionIndexer.getSectionText(targetPos));
+            if (showBubble && sectionIndexer != null) {
+                bubbleView.setText(sectionIndexer.getSectionText(targetPos));
             }
         }
     }
@@ -446,9 +448,9 @@ public class FastScroller extends LinearLayout {
 
         final int verticalScrollOffset = recyclerView.computeVerticalScrollOffset();
         final int verticalScrollRange = recyclerView.computeVerticalScrollRange();
-        final float rangeDiff = verticalScrollRange - mViewHeight;
+        final float rangeDiff = verticalScrollRange - viewHeight;
         float proportion = (float) verticalScrollOffset / (rangeDiff > 0 ? rangeDiff : 1f);
-        return mViewHeight * proportion;
+        return viewHeight * proportion;
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -458,26 +460,26 @@ public class FastScroller extends LinearLayout {
     }
 
     private void setViewPositions(float y) {
-        mBubbleHeight = mBubbleView.getHeight();
-        mHandleHeight = mHandleView.getHeight();
+        bubbleHeight = bubbleView.getHeight();
+        handleHeight = handleView.getHeight();
 
-        int bubbleY = getValueInRange(0, mViewHeight - mBubbleHeight - mHandleHeight / 2, (int) (y - mBubbleHeight));
-        int handleY = getValueInRange(0, mViewHeight - mHandleHeight, (int) (y - mHandleHeight / 2));
+        int bubbleY = getValueInRange(0, viewHeight - bubbleHeight - handleHeight / 2, (int) (y - bubbleHeight));
+        int handleY = getValueInRange(0, viewHeight - handleHeight, (int) (y - handleHeight / 2));
 
-        if (mShowBubble) {
-            mBubbleView.setY(bubbleY);
+        if (showBubble) {
+            bubbleView.setY(bubbleY);
         }
 
-        mHandleView.setY(handleY);
+        handleView.setY(handleY);
     }
 
     private void updateViewHeights() {
         int measureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 
-        mBubbleView.measure(measureSpec, measureSpec);
-        mBubbleHeight = mBubbleView.getMeasuredHeight();
-        mHandleView.measure(measureSpec, measureSpec);
-        mHandleHeight = mHandleView.getMeasuredHeight();
+        bubbleView.measure(measureSpec, measureSpec);
+        bubbleHeight = bubbleView.getMeasuredHeight();
+        handleView.measure(measureSpec, measureSpec);
+        handleHeight = handleView.getMeasuredHeight();
     }
 
     private boolean isLayoutReversed(@NonNull final RecyclerView.LayoutManager layoutManager) {
@@ -501,10 +503,10 @@ public class FastScroller extends LinearLayout {
     }
 
     private void showBubble() {
-        if (!isViewVisible(mBubbleView)) {
-            mBubbleView.setVisibility(VISIBLE);
-            mBubbleAnimator = mBubbleView.animate().alpha(1f)
-                    .setDuration(sBubbleAnimDuration)
+        if (!isViewVisible(bubbleView)) {
+            bubbleView.setVisibility(VISIBLE);
+            bubbleAnimator = bubbleView.animate().alpha(1f)
+                    .setDuration(BUBBLE_ANIM_DURATION)
                     .setListener(new AnimatorListenerAdapter() {
                         // adapter required for new alpha value to stick
                     });
@@ -512,36 +514,36 @@ public class FastScroller extends LinearLayout {
     }
 
     private void hideBubble() {
-        if (isViewVisible(mBubbleView)) {
-            mBubbleAnimator = mBubbleView.animate().alpha(0f)
-                    .setDuration(sBubbleAnimDuration)
+        if (isViewVisible(bubbleView)) {
+            bubbleAnimator = bubbleView.animate().alpha(0f)
+                    .setDuration(BUBBLE_ANIM_DURATION)
                     .setListener(new AnimatorListenerAdapter() {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mBubbleView.setVisibility(GONE);
-                            mBubbleAnimator = null;
+                            bubbleView.setVisibility(GONE);
+                            bubbleAnimator = null;
                         }
 
                         @Override
                         public void onAnimationCancel(Animator animation) {
                             super.onAnimationCancel(animation);
-                            mBubbleView.setVisibility(GONE);
-                            mBubbleAnimator = null;
+                            bubbleView.setVisibility(GONE);
+                            bubbleAnimator = null;
                         }
                     });
         }
     }
 
     private void showScrollbar() {
-        if (mRecyclerView.computeVerticalScrollRange() - mViewHeight > 0) {
+        if (recyclerView.computeVerticalScrollRange() - viewHeight > 0) {
             float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding_end);
 
-            mScrollbar.setTranslationX(transX);
-            mScrollbar.setVisibility(VISIBLE);
-            mScrollbarAnimator = mScrollbar.animate().translationX(0f).alpha(1f)
-                    .setDuration(sScrollbarAnimDuration)
+            scrollbar.setTranslationX(transX);
+            scrollbar.setVisibility(VISIBLE);
+            scrollbarAnimator = scrollbar.animate().translationX(0f).alpha(1f)
+                    .setDuration(SCROLLBAR_ANIM_DURATION)
                     .setListener(new AnimatorListenerAdapter() {
                         // adapter required for new alpha value to stick
                     });
@@ -551,29 +553,29 @@ public class FastScroller extends LinearLayout {
     private void hideScrollbar() {
         float transX = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_padding_end);
 
-        mScrollbarAnimator = mScrollbar.animate().translationX(transX).alpha(0f)
-                .setDuration(sScrollbarAnimDuration)
+        scrollbarAnimator = scrollbar.animate().translationX(transX).alpha(0f)
+                .setDuration(SCROLLBAR_ANIM_DURATION)
                 .setListener(new AnimatorListenerAdapter() {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        mScrollbar.setVisibility(GONE);
-                        mScrollbarAnimator = null;
+                        scrollbar.setVisibility(GONE);
+                        scrollbarAnimator = null;
                     }
 
                     @Override
                     public void onAnimationCancel(Animator animation) {
                         super.onAnimationCancel(animation);
-                        mScrollbar.setVisibility(GONE);
-                        mScrollbarAnimator = null;
+                        scrollbar.setVisibility(GONE);
+                        scrollbarAnimator = null;
                     }
                 });
     }
 
     private void setHandleSelected(boolean selected) {
-        mHandleView.setSelected(selected);
-        DrawableCompat.setTint(mHandleImage, selected ? mBubbleColor : mHandleColor);
+        handleView.setSelected(selected);
+        DrawableCompat.setTint(handleImage, selected ? bubbleColor : handleColor);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -583,10 +585,10 @@ public class FastScroller extends LinearLayout {
         setClipChildren(false);
         setOrientation(HORIZONTAL);
 
-        mBubbleView = findViewById(R.id.fastscroll_bubble);
-        mHandleView = findViewById(R.id.fastscroll_handle);
-        mTrackView = findViewById(R.id.fastscroll_track);
-        mScrollbar = findViewById(R.id.fastscroll_scrollbar);
+        bubbleView = findViewById(R.id.fastscroll_bubble);
+        handleView = findViewById(R.id.fastscroll_handle);
+        trackView = findViewById(R.id.fastscroll_track);
+        scrollbar = findViewById(R.id.fastscroll_scrollbar);
 
         @ColorInt int bubbleColor = Color.GRAY;
         @ColorInt int handleColor = Color.DKGRAY;

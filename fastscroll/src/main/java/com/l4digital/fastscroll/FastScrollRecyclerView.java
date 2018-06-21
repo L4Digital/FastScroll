@@ -18,6 +18,8 @@ package com.l4digital.fastscroll;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -28,25 +30,25 @@ import com.l4digital.fastscroll.FastScroller.SectionIndexer;
 @SuppressWarnings("unused")
 public class FastScrollRecyclerView extends RecyclerView {
 
-    private FastScroller mFastScroller;
+    private FastScroller fastScroller;
 
-    public FastScrollRecyclerView(Context context) {
+    public FastScrollRecyclerView(@NonNull Context context) {
         super(context);
         layout(context, null);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
-    public FastScrollRecyclerView(Context context, AttributeSet attrs) {
+    public FastScrollRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FastScrollRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FastScrollRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         layout(context, attrs);
     }
 
     @Override
-    public void setAdapter(Adapter adapter) {
+    public void setAdapter(@Nullable Adapter adapter) {
         super.setAdapter(adapter);
 
         if (adapter instanceof SectionIndexer) {
@@ -59,7 +61,7 @@ public class FastScrollRecyclerView extends RecyclerView {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        mFastScroller.setVisibility(visibility);
+        fastScroller.setVisibility(visibility);
     }
 
     /**
@@ -67,8 +69,8 @@ public class FastScrollRecyclerView extends RecyclerView {
      *
      * @param sectionIndexer The SectionIndexer that provides section text for the FastScroller
      */
-    public void setSectionIndexer(SectionIndexer sectionIndexer) {
-        mFastScroller.setSectionIndexer(sectionIndexer);
+    public void setSectionIndexer(@Nullable SectionIndexer sectionIndexer) {
+        fastScroller.setSectionIndexer(sectionIndexer);
     }
 
     /**
@@ -77,7 +79,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param enabled True to enable fast scrolling, false otherwise
      */
     public void setFastScrollEnabled(boolean enabled) {
-        mFastScroller.setEnabled(enabled);
+        fastScroller.setEnabled(enabled);
     }
 
     /**
@@ -86,7 +88,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param hideScrollbar True to hide the scrollbar, false to show
      */
     public void setHideScrollbar(boolean hideScrollbar) {
-        mFastScroller.setHideScrollbar(hideScrollbar);
+        fastScroller.setHideScrollbar(hideScrollbar);
     }
 
     /**
@@ -95,7 +97,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param visible True to show scroll track, false to hide
      */
     public void setTrackVisible(boolean visible) {
-        mFastScroller.setTrackVisible(visible);
+        fastScroller.setTrackVisible(visible);
     }
 
     /**
@@ -104,7 +106,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param color The color for the scroll track
      */
     public void setTrackColor(@ColorInt int color) {
-        mFastScroller.setTrackColor(color);
+        fastScroller.setTrackColor(color);
     }
 
     /**
@@ -113,7 +115,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param color The color for the scroll handle
      */
     public void setHandleColor(@ColorInt int color) {
-        mFastScroller.setHandleColor(color);
+        fastScroller.setHandleColor(color);
     }
 
     /**
@@ -122,7 +124,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param visible True to show the bubble, false to hide
      */
     public void setBubbleVisible(boolean visible) {
-        mFastScroller.setBubbleVisible(visible);
+        fastScroller.setBubbleVisible(visible);
     }
 
     /**
@@ -131,7 +133,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param color The background color for the index bubble
      */
     public void setBubbleColor(@ColorInt int color) {
-        mFastScroller.setBubbleColor(color);
+        fastScroller.setBubbleColor(color);
     }
 
     /**
@@ -140,7 +142,7 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param color The text color for the index bubble
      */
     public void setBubbleTextColor(@ColorInt int color) {
-        mFastScroller.setBubbleTextColor(color);
+        fastScroller.setBubbleTextColor(color);
     }
 
     /**
@@ -148,32 +150,32 @@ public class FastScrollRecyclerView extends RecyclerView {
      *
      * @param fastScrollStateChangeListener The interface that will listen to fastscroll state change events
      */
-    public void setFastScrollStateChangeListener(FastScrollStateChangeListener fastScrollStateChangeListener) {
-        mFastScroller.setFastScrollStateChangeListener(fastScrollStateChangeListener);
+    public void setFastScrollStateChangeListener(@Nullable FastScrollStateChangeListener fastScrollStateChangeListener) {
+        fastScroller.setFastScrollStateChangeListener(fastScrollStateChangeListener);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mFastScroller.attachRecyclerView(this);
+        fastScroller.attachRecyclerView(this);
 
         ViewParent parent = getParent();
 
         if (parent instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) parent;
-            viewGroup.addView(mFastScroller);
-            mFastScroller.setLayoutParams(viewGroup);
+            viewGroup.addView(fastScroller);
+            fastScroller.setLayoutParams(viewGroup);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        mFastScroller.detachRecyclerView();
+        fastScroller.detachRecyclerView();
         super.onDetachedFromWindow();
     }
 
     private void layout(Context context, AttributeSet attrs) {
-        mFastScroller = new FastScroller(context, attrs);
-        mFastScroller.setId(R.id.fastscroller);
+        fastScroller = new FastScroller(context, attrs);
+        fastScroller.setId(R.id.fastscroller);
     }
 }
