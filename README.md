@@ -36,14 +36,14 @@ dependencies {
 ## Usage
 `FastScrollRecyclerView` extends Android's `RecyclerView` and can be setup the same way.
 
-~~~java
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+~~~kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_example)
 
-    FastScrollRecyclerView recyclerView = findViewById(R.id.recycler_view);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    recyclerView.setAdapter(new ExampleAdapter());
+    val recyclerView: FastScrollRecyclerView = findViewById(R.id.recycler_view)
+    recyclerView.layoutManager = LinearLayoutManager(this)
+    recyclerView.adapter = ExampleAdapter()
 }
 ~~~
 
@@ -74,14 +74,13 @@ Add the `FastScrollRecyclerView` to your xml layout and set your customizations 
 
 Implement the `FastScroller.SectionIndexer` interface in your RecyclerView Adapter and override `getSectionText()`.
 
-~~~java
-class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ViewHolder> implements FastScroller.SectionIndexer {
+~~~kotlin
+class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
 
     ...
-
-    @Override
-    public String getSectionText(int position) {
-        return getItem(position).getIndex();
+    
+    override fun getSectionText(position: Int): String {
+        return getItem(position).getIndex()
     }
 }
 ~~~
