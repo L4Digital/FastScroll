@@ -17,6 +17,7 @@
 
 <resources>
 
-    <item type="id" name="fastscroller" />
+    <item name="fast_scroller" type="id" />
+    <item name="recycler_view" type="id" />
 
 </resources>

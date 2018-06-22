@@ -25,7 +25,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -35,6 +34,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -49,12 +49,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+/**
+ * A ListView-like FastScroller for the {@link RecyclerView}.
+ * <p>
+ * FastScroller provides the fast scrolling and section indexing for a RecyclerView,
+ * with a Lollipop styled scrollbar and section “bubble” view. The scrollbar provides
+ * a handle for quickly navigating the list while the bubble view displays the
+ * currently visible section index.
+ * <p>
+ * The following attributes can be set to customize the visibility and appearance of
+ * the elements within the FastScroller view:
+ *
+ * {@link R.styleable#FastScroller_hideScrollbar}
+ * {@link R.styleable#FastScroller_showBubble}
+ * {@link R.styleable#FastScroller_showTrack}
+ * {@link R.styleable#FastScroller_bubbleColor}
+ * {@link R.styleable#FastScroller_bubbleTextColor}
+ * {@link R.styleable#FastScroller_handleColor}
+ * {@link R.styleable#FastScroller_trackColor}
+ */
 public class FastScroller extends LinearLayout {
-
-    public interface SectionIndexer {
-
-        String getSectionText(int position);
-    }
 
     private static final int BUBBLE_ANIM_DURATION = 100;
     private static final int SCROLLBAR_ANIM_DURATION = 300;
@@ -69,21 +83,22 @@ public class FastScroller extends LinearLayout {
     private int viewHeight;
     private boolean hideScrollbar;
     private boolean showBubble;
-    private SectionIndexer sectionIndexer;
-    private ViewPropertyAnimator scrollbarAnimator;
-    private ViewPropertyAnimator bubbleAnimator;
-    private RecyclerView recyclerView;
-    private TextView bubbleView;
-    private ImageView handleView;
-    private ImageView trackView;
-    private View scrollbar;
     private Drawable bubbleImage;
     private Drawable handleImage;
     private Drawable trackImage;
+    private ImageView handleView;
+    private ImageView trackView;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView bubbleView;
+    private View scrollbar;
+    private ViewPropertyAnimator scrollbarAnimator;
+    private ViewPropertyAnimator bubbleAnimator;
 
-    private FastScrollStateChangeListener fastScrollStateChangeListener;
+    private FastScrollListener fastScrollListener;
+    private SectionIndexer sectionIndexer;
 
-    private Runnable scrollbarHider = new Runnable() {
+    private final Runnable scrollbarHider = new Runnable() {
 
         @Override
         public void run() {
@@ -91,12 +106,18 @@ public class FastScroller extends LinearLayout {
         }
     };
 
-    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+    private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             if (!handleView.isSelected() && isEnabled()) {
                 setViewPositions(getScrollProportion(recyclerView));
+            }
+
+            if (swipeRefreshLayout != null) {
+                int firstVisibleItem = findFirstVisibleItemPosition(recyclerView.getLayoutManager());
+                int topPosition = recyclerView.getChildCount() == 0 ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topPosition >= 0);
             }
         }
 
@@ -144,13 +165,91 @@ public class FastScroller extends LinearLayout {
     }
 
     @Override
+    @SuppressLint("ClickableViewAccessibility")
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            if (event.getX() < handleView.getX() - ViewCompat.getPaddingStart(handleView)) {
+                return false;
+            }
+
+            requestDisallowInterceptTouchEvent(true);
+            setHandleSelected(true);
+
+            getHandler().removeCallbacks(scrollbarHider);
+            cancelAnimation(scrollbarAnimator);
+            cancelAnimation(bubbleAnimator);
+
+            if (!isViewVisible(scrollbar)) {
+                showScrollbar();
+            }
+
+            if (showBubble && sectionIndexer != null) {
+                showBubble();
+            }
+
+            if (fastScrollListener != null) {
+                fastScrollListener.onFastScrollStart(this);
+            }
+        case MotionEvent.ACTION_MOVE:
+            final float y = event.getY();
+            setViewPositions(y);
+            setRecyclerViewPosition(y);
+            return true;
+        case MotionEvent.ACTION_UP:
+        case MotionEvent.ACTION_CANCEL:
+            requestDisallowInterceptTouchEvent(false);
+            setHandleSelected(false);
+
+            if (hideScrollbar) {
+                getHandler().postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY);
+            }
+
+            hideBubble();
+
+            if (fastScrollListener != null) {
+                fastScrollListener.onFastScrollStop(this);
+            }
+
+            return true;
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    /**
+     * Set the enabled state of this view.
+     *
+     * @param enabled True if this view is enabled, false otherwise
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        setVisibility(enabled ? VISIBLE : GONE);
+    }
+
+    /**
+     * Set the {@link ViewGroup.LayoutParams} associated with this view. These supply
+     * parameters to the <i>parent</i> of this view specifying how it should be
+     * arranged.
+     *
+     * @param params The {@link ViewGroup.LayoutParams} for this view, cannot be null
+     */
+    @Override
     public void setLayoutParams(@NonNull ViewGroup.LayoutParams params) {
         params.width = LayoutParams.WRAP_CONTENT;
         super.setLayoutParams(params);
     }
 
+    /**
+     * Set the {@link ViewGroup.LayoutParams} associated with this view. These supply
+     * parameters to the <i>parent</i> of this view specifying how it should be
+     * arranged.
+     *
+     * @param viewGroup The parent {@link ViewGroup} for this view, cannot be null
+     */
     public void setLayoutParams(@NonNull ViewGroup viewGroup) {
-        @IdRes int recyclerViewId = recyclerView != null ? recyclerView.getId() : NO_ID;
+        int recyclerViewId = recyclerView != null ? recyclerView.getId() : NO_ID;
         int marginTop = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_top);
         int marginBottom = getResources().getDimensionPixelSize(R.dimen.fastscroll_scrollbar_margin_bottom);
 
@@ -160,29 +259,34 @@ public class FastScroller extends LinearLayout {
 
         if (viewGroup instanceof ConstraintLayout) {
             ConstraintSet constraintSet = new ConstraintSet();
-            @IdRes int layoutId = getId();
+            int endId = recyclerView.getParent() == getParent() ? recyclerViewId : ConstraintSet.PARENT_ID;
+            int startId = getId();
 
             constraintSet.clone((ConstraintLayout) viewGroup);
-            constraintSet.connect(layoutId, ConstraintSet.TOP, recyclerViewId, ConstraintSet.TOP);
-            constraintSet.connect(layoutId, ConstraintSet.BOTTOM, recyclerViewId, ConstraintSet.BOTTOM);
-            constraintSet.connect(layoutId, ConstraintSet.END, recyclerViewId, ConstraintSet.END);
+            constraintSet.connect(startId, ConstraintSet.TOP, endId, ConstraintSet.TOP);
+            constraintSet.connect(startId, ConstraintSet.BOTTOM, endId, ConstraintSet.BOTTOM);
+            constraintSet.connect(startId, ConstraintSet.END, endId, ConstraintSet.END);
             constraintSet.applyTo((ConstraintLayout) viewGroup);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
+
+            layoutParams.height = 0;
             layoutParams.setMargins(0, marginTop, 0, marginBottom);
             setLayoutParams(layoutParams);
 
         } else if (viewGroup instanceof CoordinatorLayout) {
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) getLayoutParams();
 
-            layoutParams.setAnchorId(recyclerViewId);
+            layoutParams.height = LayoutParams.MATCH_PARENT;
             layoutParams.anchorGravity = GravityCompat.END;
+            layoutParams.setAnchorId(recyclerViewId);
             layoutParams.setMargins(0, marginTop, 0, marginBottom);
             setLayoutParams(layoutParams);
 
         } else if (viewGroup instanceof FrameLayout) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
 
+            layoutParams.height = LayoutParams.MATCH_PARENT;
             layoutParams.gravity = GravityCompat.END;
             layoutParams.setMargins(0, marginTop, 0, marginBottom);
             setLayoutParams(layoutParams);
@@ -192,6 +296,7 @@ public class FastScroller extends LinearLayout {
             int endRule = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ?
                     RelativeLayout.ALIGN_END : RelativeLayout.ALIGN_RIGHT;
 
+            layoutParams.height = 0;
             layoutParams.addRule(RelativeLayout.ALIGN_TOP, recyclerViewId);
             layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, recyclerViewId);
             layoutParams.addRule(endRule, recyclerViewId);
@@ -205,32 +310,76 @@ public class FastScroller extends LinearLayout {
         updateViewHeights();
     }
 
-    public void setSectionIndexer(@Nullable SectionIndexer sectionIndexer) {
-        this.sectionIndexer = sectionIndexer;
-    }
-
+    /**
+     * Set the {@link RecyclerView} associated with this {@link FastScroller}. This allows the
+     * FastScroller to set its layout parameters and listen for scroll changes.
+     *
+     * @param recyclerView The {@link RecyclerView} to attach, cannot be null
+     * @see #detachRecyclerView()
+     */
     public void attachRecyclerView(@NonNull RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
 
-        //noinspection ConstantConditions
-        if (this.recyclerView != null) {
-            this.recyclerView.addOnScrollListener(scrollListener);
-            post(new Runnable() {
-
-                @Override
-                public void run() {
-                    // set initial positions for bubble and handle
-                    setViewPositions(getScrollProportion(FastScroller.this.recyclerView));
-                }
-            });
+        if (getParent() instanceof ViewGroup) {
+            setLayoutParams((ViewGroup) getParent());
+        } else if (recyclerView.getParent() instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) recyclerView.getParent();
+            viewGroup.addView(this);
+            setLayoutParams(viewGroup);
         }
+
+        recyclerView.addOnScrollListener(scrollListener);
+
+        post(new Runnable() {
+
+            @Override
+            public void run() {
+                // set initial positions for bubble and handle
+                setViewPositions(getScrollProportion(FastScroller.this.recyclerView));
+            }
+        });
     }
 
+    /**
+     * Clears references to the attached {@link RecyclerView} and stops listening for scroll changes.
+     *
+     * @see #attachRecyclerView(RecyclerView)
+     */
     public void detachRecyclerView() {
         if (recyclerView != null) {
             recyclerView.removeOnScrollListener(scrollListener);
             recyclerView = null;
         }
+    }
+
+    /**
+     * Set a new {@link FastScrollListener} that will listen to fast scroll events.
+     *
+     * @param fastScrollListener The new {@link FastScrollListener} to set, or null to set none
+     */
+    public void setFastScrollListener(@Nullable FastScrollListener fastScrollListener) {
+        this.fastScrollListener = fastScrollListener;
+    }
+
+    /**
+     * Set a new {@link SectionIndexer} that provides section text for this {@link FastScroller}.
+     *
+     * @param sectionIndexer The new {@link SectionIndexer} to set, or null to set none
+     */
+    public void setSectionIndexer(@Nullable SectionIndexer sectionIndexer) {
+        this.sectionIndexer = sectionIndexer;
+    }
+
+    /**
+     * Set a {@link SwipeRefreshLayout} to disable when the {@link RecyclerView} is scrolled away from the top.
+     * <p>
+     * Required when {@link Build.VERSION#SDK_INT} < {@value Build.VERSION_CODES#LOLLIPOP}, otherwise use
+     * {@link View#setNestedScrollingEnabled(boolean) setNestedScrollingEnabled(true)}.
+     *
+     * @param swipeRefreshLayout The {@link SwipeRefreshLayout} to set, or null to set none
+     */
+    public void setSwipeRefreshLayout(@Nullable SwipeRefreshLayout swipeRefreshLayout) {
+        this.swipeRefreshLayout = swipeRefreshLayout;
     }
 
     /**
@@ -339,77 +488,9 @@ public class FastScroller extends LinearLayout {
         bubbleView.setTextColor(color);
     }
 
-    /**
-     * Set the fast scroll state change listener.
-     *
-     * @param fastScrollStateChangeListener The interface that will listen to fastscroll state change events
-     */
-    public void setFastScrollStateChangeListener(@Nullable FastScrollStateChangeListener fastScrollStateChangeListener) {
-        this.fastScrollStateChangeListener = fastScrollStateChangeListener;
-    }
-
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        setVisibility(enabled ? VISIBLE : GONE);
-    }
-
-    @Override
-    @SuppressLint("ClickableViewAccessibility")
-    public boolean onTouchEvent(@NonNull MotionEvent event) {
-        switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            if (event.getX() < handleView.getX() - ViewCompat.getPaddingStart(handleView)) {
-                return false;
-            }
-
-            requestDisallowInterceptTouchEvent(true);
-            setHandleSelected(true);
-
-            getHandler().removeCallbacks(scrollbarHider);
-            cancelAnimation(scrollbarAnimator);
-            cancelAnimation(bubbleAnimator);
-
-            if (!isViewVisible(scrollbar)) {
-                showScrollbar();
-            }
-
-            if (showBubble && sectionIndexer != null) {
-                showBubble();
-            }
-
-            if (fastScrollStateChangeListener != null) {
-                fastScrollStateChangeListener.onFastScrollStart(this);
-            }
-        case MotionEvent.ACTION_MOVE:
-            final float y = event.getY();
-            setViewPositions(y);
-            setRecyclerViewPosition(y);
-            return true;
-        case MotionEvent.ACTION_UP:
-        case MotionEvent.ACTION_CANCEL:
-            requestDisallowInterceptTouchEvent(false);
-            setHandleSelected(false);
-
-            if (hideScrollbar) {
-                getHandler().postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY);
-            }
-
-            hideBubble();
-
-            if (fastScrollStateChangeListener != null) {
-                fastScrollStateChangeListener.onFastScrollStop(this);
-            }
-
-            return true;
-        }
-
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
         viewHeight = h;
     }
 
@@ -460,8 +541,8 @@ public class FastScroller extends LinearLayout {
     }
 
     private void setViewPositions(float y) {
-        bubbleHeight = bubbleView.getHeight();
-        handleHeight = handleView.getHeight();
+        bubbleHeight = bubbleView.getMeasuredHeight();
+        handleHeight = handleView.getMeasuredHeight();
 
         int bubbleY = getValueInRange(0, viewHeight - bubbleHeight - handleHeight / 2, (int) (y - bubbleHeight));
         int handleY = getValueInRange(0, viewHeight - handleHeight, (int) (y - handleHeight / 2));
@@ -480,6 +561,16 @@ public class FastScroller extends LinearLayout {
         bubbleHeight = bubbleView.getMeasuredHeight();
         handleView.measure(measureSpec, measureSpec);
         handleHeight = handleView.getMeasuredHeight();
+    }
+
+    private int findFirstVisibleItemPosition(@NonNull final RecyclerView.LayoutManager layoutManager) {
+        if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            return ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null)[0];
+        }
+
+        return 0;
     }
 
     private boolean isLayoutReversed(@NonNull final RecyclerView.LayoutManager layoutManager) {
@@ -580,7 +671,7 @@ public class FastScroller extends LinearLayout {
 
     @SuppressWarnings("ConstantConditions")
     private void layout(Context context, AttributeSet attrs) {
-        inflate(context, R.layout.fastscroller, this);
+        inflate(context, R.layout.fast_scroller, this);
 
         setClipChildren(false);
         setOrientation(HORIZONTAL);
@@ -624,5 +715,41 @@ public class FastScroller extends LinearLayout {
         setHideScrollbar(hideScrollbar);
         setBubbleVisible(showBubble);
         setTrackVisible(showTrack);
+    }
+
+    /**
+     * A FastScrollListener can be added to a {@link FastScroller} to receive messages when a
+     * fast scrolling event has occurred.
+     *
+     * @see FastScroller#setFastScrollListener(FastScrollListener)
+     */
+    public interface FastScrollListener {
+
+        /**
+         * Called when fast scrolling begins.
+         */
+        void onFastScrollStart(FastScroller fastScroller);
+
+        /**
+         * Called when fast scrolling ends.
+         */
+        void onFastScrollStop(FastScroller fastScroller);
+    }
+
+    /**
+     * A SectionIndexer can be added to a {@link FastScroller} to provide the text to display
+     * for the visible section while fast scrolling.
+     *
+     * @see FastScroller#setSectionIndexer(SectionIndexer)
+     */
+    public interface SectionIndexer {
+
+        /**
+         * Get the text to be displayed for the visible section at the current position.
+         *
+         * @param position The current position of the visible section
+         * @return The text to display
+         */
+        String getSectionText(int position);
     }
 }
