@@ -21,10 +21,10 @@
         <attr name="hideScrollbar" format="boolean" />
         <attr name="showBubble" format="boolean" />
         <attr name="showTrack" format="boolean" />
-        <attr name="trackColor" format="color" />
-        <attr name="handleColor" format="color" />
         <attr name="bubbleColor" format="color" />
         <attr name="bubbleTextColor" format="color" />
+        <attr name="handleColor" format="color" />
+        <attr name="trackColor" format="color" />
     </declare-styleable>
 
 </resources>

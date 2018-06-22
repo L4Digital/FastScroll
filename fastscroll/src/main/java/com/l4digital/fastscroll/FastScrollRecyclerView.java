@@ -22,11 +22,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 
-import com.l4digital.fastscroll.FastScroller.SectionIndexer;
-
+/**
+ * A {@link RecyclerView} that adds a {@link FastScroller} to its parent ViewGroup.
+ * <p>
+ * FastScrollRecyclerView simplifies implementation by creating and adding the FastScroller,
+ * and managing its lifecycle.
+ */
 @SuppressWarnings("unused")
 public class FastScrollRecyclerView extends RecyclerView {
 
@@ -47,17 +49,28 @@ public class FastScrollRecyclerView extends RecyclerView {
         layout(context, attrs);
     }
 
+    /**
+     * Set a new {@link RecyclerView.Adapter} that implements {@link FastScroller.SectionIndexer}
+     * to provide child views for the RecyclerView and section text for the FastScroller.
+     *
+     * @param adapter The new {@link RecyclerView.Adapter} to set, or null to set none
+     */
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
         super.setAdapter(adapter);
 
-        if (adapter instanceof SectionIndexer) {
-            setSectionIndexer((SectionIndexer) adapter);
+        if (adapter instanceof FastScroller.SectionIndexer) {
+            fastScroller.setSectionIndexer((FastScroller.SectionIndexer) adapter);
         } else if (adapter == null) {
-            setSectionIndexer(null);
+            fastScroller.setSectionIndexer(null);
         }
     }
 
+    /**
+     * Set the visibility state of this view.
+     *
+     * @param visibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}
+     */
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
@@ -65,11 +78,20 @@ public class FastScrollRecyclerView extends RecyclerView {
     }
 
     /**
-     * Set the {@link SectionIndexer} for the {@link FastScroller}.
+     * Set a new {@link FastScroller.FastScrollListener} that will listen to fast scroll events.
      *
-     * @param sectionIndexer The SectionIndexer that provides section text for the FastScroller
+     * @param fastScrollListener The new {@link FastScroller.FastScrollListener} to set, or null to set none
      */
-    public void setSectionIndexer(@Nullable SectionIndexer sectionIndexer) {
+    public void setFastScrollListener(@Nullable FastScroller.FastScrollListener fastScrollListener) {
+        fastScroller.setFastScrollListener(fastScrollListener);
+    }
+
+    /**
+     * Set a new {@link FastScroller.SectionIndexer} that provides section text for the {@link FastScroller}.
+     *
+     * @param sectionIndexer The new {@link FastScroller.SectionIndexer} to set, or null to set no none
+     */
+    public void setSectionIndexer(@Nullable FastScroller.SectionIndexer sectionIndexer) {
         fastScroller.setSectionIndexer(sectionIndexer);
     }
 
@@ -145,27 +167,10 @@ public class FastScrollRecyclerView extends RecyclerView {
         fastScroller.setBubbleTextColor(color);
     }
 
-    /**
-     * Set the fast scroll state change listener.
-     *
-     * @param fastScrollStateChangeListener The interface that will listen to fastscroll state change events
-     */
-    public void setFastScrollStateChangeListener(@Nullable FastScrollStateChangeListener fastScrollStateChangeListener) {
-        fastScroller.setFastScrollStateChangeListener(fastScrollStateChangeListener);
-    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         fastScroller.attachRecyclerView(this);
-
-        ViewParent parent = getParent();
-
-        if (parent instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) parent;
-            viewGroup.addView(fastScroller);
-            fastScroller.setLayoutParams(viewGroup);
-        }
     }
 
     @Override
@@ -176,6 +181,6 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     private void layout(Context context, AttributeSet attrs) {
         fastScroller = new FastScroller(context, attrs);
-        fastScroller.setId(R.id.fastscroller);
+        fastScroller.setId(R.id.fast_scroller);
     }
 }
