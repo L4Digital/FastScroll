@@ -30,7 +30,7 @@ import android.widget.FrameLayout;
  * <p>
  * FastScrollView simplifies implementation by creating the RecyclerView and FastScroller,
  * and managing the FastScroller lifecycle. It's also useful when the parent ViewGroup
- * requires a single child view, for example {@link SwipeRefreshLayout}.
+ * requires a single child view, for example a {@link SwipeRefreshLayout}.
  */
 @SuppressWarnings("unused")
 public class FastScrollView extends FrameLayout {
