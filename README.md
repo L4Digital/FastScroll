@@ -15,7 +15,7 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 #### Gradle:
 ~~~groovy
 dependencies {
-    compile 'com.l4digital.fastscroll:fastscroll:2.0.0-beta1'
+    implementation 'com.l4digital.fastscroll:fastscroll:2.0.0-beta1'
 }
 ~~~
 
@@ -69,9 +69,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_example)
 
-    val recyclerView: FastScrollRecyclerView = findViewById(R.id.recycler_view)
-    recyclerView.layoutManager = LinearLayoutManager(this)
-    recyclerView.adapter = ExampleAdapter()
+    val recyclerView: FastScrollRecyclerView? = findViewById(R.id.recycler_view)
+    recyclerView?.layoutManager = LinearLayoutManager(this)
+    recyclerView?.adapter = ExampleAdapter()
 }
 ~~~
 
@@ -119,9 +119,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_example)
 
-    val fastScrollView: FastScrollView = findViewById(R.id.fastscroll_view)
-    fastScrollView.recyclerView.layoutManager = LinearLayoutManager(this)
-    fastScrollView.setAdapter(ExampleAdapter())
+    val fastScrollView: FastScrollView? = findViewById(R.id.fastscroll_view)
+    fastScrollView?.recyclerView.layoutManager = LinearLayoutManager(this)
+    fastScrollView?.setAdapter(ExampleAdapter())
 }
 ~~~
 
