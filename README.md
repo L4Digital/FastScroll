@@ -82,7 +82,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 
     ...
 
-    override fun getSectionText(position: Int): String {
+    override fun getSectionText(position: Int): CharSequence {
         return getItem(position).getIndex()
     }
 }
@@ -132,7 +132,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 
     ...
 
-    override fun getSectionText(position: Int): String {
+    override fun getSectionText(position: Int): CharSequence {
         return getItem(position).getIndex()
     }
 }
