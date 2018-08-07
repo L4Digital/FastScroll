@@ -59,7 +59,7 @@ import android.widget.TextView;
  * <p>
  * The following attributes can be set to customize the visibility and appearance of
  * the elements within the FastScroller view:
- *
+ * <p>
  * {@link R.styleable#FastScroller_hideScrollbar}
  * {@link R.styleable#FastScroller_showBubble}
  * {@link R.styleable#FastScroller_showTrack}
@@ -750,6 +750,6 @@ public class FastScroller extends LinearLayout {
          * @param position The current position of the visible section
          * @return The text to display
          */
-        String getSectionText(int position);
+        CharSequence getSectionText(int position);
     }
 }
