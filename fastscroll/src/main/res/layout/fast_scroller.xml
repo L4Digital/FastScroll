@@ -26,7 +26,6 @@
         android:layout_gravity="end"
         android:gravity="center"
         android:maxLines="1"
-        android:textSize="@dimen/fastscroll_bubble_text_size"
         android:visibility="gone"
         tools:background="@drawable/fastscroll_bubble"
         tools:text="A"

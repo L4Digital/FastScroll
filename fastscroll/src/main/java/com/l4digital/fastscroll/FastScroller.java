@@ -39,6 +39,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -488,6 +489,15 @@ public class FastScroller extends LinearLayout {
         bubbleView.setTextColor(color);
     }
 
+    /**
+     * Set the scaled pixel text size of the index bubble.
+     *
+     * @param size The scaled pixel text size for the index bubble
+     */
+    public void setBubbleTextSize(int size) {
+        bubbleView.setTextSize(size);
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
@@ -690,6 +700,8 @@ public class FastScroller extends LinearLayout {
         boolean showBubble = true;
         boolean showTrack = false;
 
+        float textSize = getResources().getDimension(R.dimen.fastscroll_bubble_text_size);
+
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FastScroller, 0, 0);
 
@@ -699,6 +711,7 @@ public class FastScroller extends LinearLayout {
                     handleColor = typedArray.getColor(R.styleable.FastScroller_handleColor, handleColor);
                     trackColor = typedArray.getColor(R.styleable.FastScroller_trackColor, trackColor);
                     textColor = typedArray.getColor(R.styleable.FastScroller_bubbleTextColor, textColor);
+                    textSize = typedArray.getDimension(R.styleable.FastScroller_bubbleTextSize, textSize);
                     hideScrollbar = typedArray.getBoolean(R.styleable.FastScroller_hideScrollbar, hideScrollbar);
                     showBubble = typedArray.getBoolean(R.styleable.FastScroller_showBubble, showBubble);
                     showTrack = typedArray.getBoolean(R.styleable.FastScroller_showTrack, showTrack);
@@ -715,6 +728,8 @@ public class FastScroller extends LinearLayout {
         setHideScrollbar(hideScrollbar);
         setBubbleVisible(showBubble);
         setTrackVisible(showTrack);
+
+        bubbleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
     /**

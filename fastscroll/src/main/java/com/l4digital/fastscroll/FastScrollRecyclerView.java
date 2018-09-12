@@ -167,6 +167,15 @@ public class FastScrollRecyclerView extends RecyclerView {
         fastScroller.setBubbleTextColor(color);
     }
 
+    /**
+     * Set the scaled pixel text size of the index bubble.
+     *
+     * @param size The scaled pixel text size for the index bubble
+     */
+    public void setBubbleTextSize(int size) {
+        fastScroller.setBubbleTextSize(size);
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
