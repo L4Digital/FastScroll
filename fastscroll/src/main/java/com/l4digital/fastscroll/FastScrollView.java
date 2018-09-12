@@ -89,6 +89,15 @@ public class FastScrollView extends FrameLayout {
         }
     }
 
+    /**
+     * Set a new {@link RecyclerView.LayoutManager} for the RecyclerView.
+     *
+     * @param layoutManager The new {@link RecyclerView.LayoutManager} to set
+     */
+    public void setLayoutManager(@NonNull RecyclerView.LayoutManager layoutManager) {
+        recyclerView.setLayoutManager(layoutManager);
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();

@@ -26,6 +26,10 @@
         <attr format="color" name="handleColor" />
         <attr format="color" name="trackColor" />
         <attr format="dimension" name="bubbleTextSize" />
+        <attr format="enum" name="bubbleSize">
+            <enum name="normal" value="0" />
+            <enum name="small" value="1" />
+        </attr>
     </declare-styleable>
 
 </resources>

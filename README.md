@@ -1,5 +1,5 @@
 # FastScroll
-[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html) [![Download](https://img.shields.io/badge/JCenter-2.0.0‒beta1-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
+[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html) [![Download](https://img.shields.io/badge/JCenter-2.0.0‒beta2-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
 
 A ListView-like FastScroller for Android’s RecyclerView.
 
@@ -15,7 +15,7 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 #### Gradle:
 ~~~groovy
 dependencies {
-    implementation 'com.l4digital.fastscroll:fastscroll:2.0.0-beta1'
+    implementation 'com.l4digital.fastscroll:fastscroll:2.0.0-beta2'
 }
 ~~~
 
@@ -24,7 +24,7 @@ dependencies {
 <dependency>
   <groupId>com.l4digital.fastscroll</groupId>
   <artifactId>fastscroll</artifactId>
-  <version>2.0.0-beta1</version>
+  <version>2.0.0-beta2</version>
 </dependency>
 ~~~
 
@@ -54,10 +54,7 @@ Add the `FastScrollRecyclerView` to your xml layout and set your customizations 
         android:layout_height="match_parent"
         app:bubbleColor="#00bb00"
         app:bubbleTextColor="#ffffff"
-        app:handleColor="#999999"
-        app:trackColor="#bbbbbb"
-        app:hideScrollbar="false"
-        app:showTrack="false" />
+        app:handleColor="#999999" />
 
 </FrameLayout>
 ~~~
@@ -104,10 +101,7 @@ Add the `FastScrollView` to your xml layout and set your customizations using at
         android:layout_height="match_parent"
         app:bubbleColor="#00bb00"
         app:bubbleTextColor="#ffffff"
-        app:handleColor="#999999"
-        app:trackColor="#bbbbbb"
-        app:hideScrollbar="false"
-        app:showTrack="false" />
+        app:handleColor="#999999" />
 
 </android.support.v4.widget.SwipeRefreshLayout>
 ~~~
@@ -120,7 +114,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
     setContentView(R.layout.activity_example)
 
     val fastScrollView: FastScrollView? = findViewById(R.id.fastscroll_view)
-    fastScrollView?.recyclerView.layoutManager = LinearLayoutManager(this)
+    fastScrollView?.setLayoutManager(LinearLayoutManager(this))
     fastScrollView?.setAdapter(ExampleAdapter())
 }
 ~~~
@@ -140,6 +134,20 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 
 #### Alternative Usage:
 If you are unable to use the `FastScrollRecyclerView` or `FastScrollView`, you can add a `FastScroller` to your layout and implement with any `RecyclerView`. See this [github issue](https://github.com/L4Digital/FastScroll/issues/4#issuecomment-256975634) for an example.
+
+
+## Customization
+The following attributes can be set to customize the visibility and appearance of the elements within the FastScroller view:
+
+* `app:hideScrollbar=["true" | "false"]` *Hides the scrollbar when not scrolling*
+* `app:showBubble=["true" | "false"]` *Shows the section bubble while scrolling*
+* `app:showTrack=["true" | "false"]` *Shows the scroll track while scrolling*
+* `app:handleColor=["#rrggbb" | "@color"]` *Sets the color of the scroll handle*
+* `app:trackColor=["#rrggbb" | "@color"]` *Sets the color of the scroll track*
+* `app:bubbleColor=["#rrggbb" | "@color"]` *Sets the background color of the section bubble*
+* `app:bubbleSize=["normal" | "small"]` *Sets the size of the section bubble*
+* `app:bubbleTextColor=["#rrggbb" | "@color"]` *Sets the text color of the section bubble*
+* `app:bubbleTextSize=["sp" | "@dimen"]` *Sets the scaled pixel text size of the section bubble*
 
 
 ## License

@@ -114,7 +114,7 @@ public class FastScrollRecyclerView extends RecyclerView {
     }
 
     /**
-     * Display a scroll track while scrolling.
+     * Show the scroll track while scrolling.
      *
      * @param visible True to show scroll track, false to hide
      */
@@ -132,7 +132,7 @@ public class FastScrollRecyclerView extends RecyclerView {
     }
 
     /**
-     * Set the color for the scroll handle.
+     * Set the color of the scroll handle.
      *
      * @param color The color for the scroll handle
      */
@@ -150,27 +150,27 @@ public class FastScrollRecyclerView extends RecyclerView {
     }
 
     /**
-     * Set the background color of the index bubble.
+     * Set the background color of the section bubble.
      *
-     * @param color The background color for the index bubble
+     * @param color The background color for the section bubble
      */
     public void setBubbleColor(@ColorInt int color) {
         fastScroller.setBubbleColor(color);
     }
 
     /**
-     * Set the text color of the index bubble.
+     * Set the text color of the section bubble.
      *
-     * @param color The text color for the index bubble
+     * @param color The text color for the section bubble
      */
     public void setBubbleTextColor(@ColorInt int color) {
         fastScroller.setBubbleTextColor(color);
     }
 
     /**
-     * Set the scaled pixel text size of the index bubble.
+     * Set the scaled pixel text size of the section bubble.
      *
-     * @param size The scaled pixel text size for the index bubble
+     * @param size The scaled pixel text size for the section bubble
      */
     public void setBubbleTextSize(int size) {
         fastScroller.setBubbleTextSize(size);
