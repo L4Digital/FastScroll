@@ -18,13 +18,14 @@
 <resources>
 
     <declare-styleable name="FastScroller">
-        <attr name="hideScrollbar" format="boolean" />
-        <attr name="showBubble" format="boolean" />
-        <attr name="showTrack" format="boolean" />
-        <attr name="bubbleColor" format="color" />
-        <attr name="bubbleTextColor" format="color" />
-        <attr name="handleColor" format="color" />
-        <attr name="trackColor" format="color" />
+        <attr format="boolean" name="hideScrollbar" />
+        <attr format="boolean" name="showBubble" />
+        <attr format="boolean" name="showTrack" />
+        <attr format="color" name="bubbleColor" />
+        <attr format="color" name="bubbleTextColor" />
+        <attr format="color" name="handleColor" />
+        <attr format="color" name="trackColor" />
+        <attr format="dimension" name="bubbleTextSize" />
     </declare-styleable>
 
 </resources>
