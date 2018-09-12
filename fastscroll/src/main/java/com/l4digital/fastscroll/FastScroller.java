@@ -25,6 +25,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DimenRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -64,12 +66,31 @@ import android.widget.TextView;
  * {@link R.styleable#FastScroller_hideScrollbar}
  * {@link R.styleable#FastScroller_showBubble}
  * {@link R.styleable#FastScroller_showTrack}
- * {@link R.styleable#FastScroller_bubbleColor}
- * {@link R.styleable#FastScroller_bubbleTextColor}
  * {@link R.styleable#FastScroller_handleColor}
  * {@link R.styleable#FastScroller_trackColor}
+ * {@link R.styleable#FastScroller_bubbleColor}
+ * {@link R.styleable#FastScroller_bubbleSize}
+ * {@link R.styleable#FastScroller_bubbleTextColor}
+ * {@link R.styleable#FastScroller_bubbleTextSize}
  */
 public class FastScroller extends LinearLayout {
+
+    public enum Size {
+        NORMAL(R.drawable.fastscroll_bubble, R.dimen.fastscroll_bubble_text_size),
+        SMALL(R.drawable.fastscroll_bubble_small, R.dimen.fastscroll_bubble_text_size_small);
+
+        @DrawableRes public int drawableId;
+        @DimenRes public int textSizeId;
+
+        Size(@DrawableRes int drawableId, @DimenRes int textSizeId) {
+            this.drawableId = drawableId;
+            this.textSizeId = textSizeId;
+        }
+
+        public static Size fromOrdinal(int ordinal) {
+            return ordinal >= 0 && ordinal < values().length ? values()[ordinal] : NORMAL;
+        }
+    }
 
     private static final int BUBBLE_ANIM_DURATION = 100;
     private static final int SCROLLBAR_ANIM_DURATION = 300;
@@ -90,6 +111,7 @@ public class FastScroller extends LinearLayout {
     private ImageView handleView;
     private ImageView trackView;
     private RecyclerView recyclerView;
+    private Size bubbleSize;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView bubbleView;
     private View scrollbar;
@@ -150,8 +172,12 @@ public class FastScroller extends LinearLayout {
     };
 
     public FastScroller(@NonNull Context context) {
+        this(context, Size.NORMAL);
+    }
+
+    public FastScroller(@NonNull Context context, Size size) {
         super(context);
-        layout(context, null);
+        layout(context, size);
         setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
@@ -394,16 +420,7 @@ public class FastScroller extends LinearLayout {
     }
 
     /**
-     * Show the section bubble while scrolling.
-     *
-     * @param visible True to show the bubble, false to hide
-     */
-    public void setBubbleVisible(boolean visible) {
-        showBubble = visible;
-    }
-
-    /**
-     * Display a scroll track while scrolling.
+     * Show the scroll track while scrolling.
      *
      * @param visible True to show scroll track, false to hide
      */
@@ -433,7 +450,7 @@ public class FastScroller extends LinearLayout {
     }
 
     /**
-     * Set the color for the scroll handle.
+     * Set the color of the scroll handle.
      *
      * @param color The color for the scroll handle
      */
@@ -454,15 +471,24 @@ public class FastScroller extends LinearLayout {
     }
 
     /**
-     * Set the background color of the index bubble.
+     * Show the section bubble while scrolling.
      *
-     * @param color The background color for the index bubble
+     * @param visible True to show the bubble, false to hide
+     */
+    public void setBubbleVisible(boolean visible) {
+        showBubble = visible;
+    }
+
+    /**
+     * Set the background color of the section bubble.
+     *
+     * @param color The background color for the section bubble
      */
     public void setBubbleColor(@ColorInt int color) {
         bubbleColor = color;
 
         if (bubbleImage == null) {
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.fastscroll_bubble);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), bubbleSize.drawableId);
 
             if (drawable != null) {
                 bubbleImage = DrawableCompat.wrap(drawable);
@@ -481,18 +507,18 @@ public class FastScroller extends LinearLayout {
     }
 
     /**
-     * Set the text color of the index bubble.
+     * Set the text color of the section bubble.
      *
-     * @param color The text color for the index bubble
+     * @param color The text color for the section bubble
      */
     public void setBubbleTextColor(@ColorInt int color) {
         bubbleView.setTextColor(color);
     }
 
     /**
-     * Set the scaled pixel text size of the index bubble.
+     * Set the scaled pixel text size of the section bubble.
      *
-     * @param size The scaled pixel text size for the index bubble
+     * @param size The scaled pixel text size for the section bubble
      */
     public void setBubbleTextSize(int size) {
         bubbleView.setTextSize(size);
@@ -679,8 +705,16 @@ public class FastScroller extends LinearLayout {
         DrawableCompat.setTint(handleImage, selected ? bubbleColor : handleColor);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void layout(Context context, AttributeSet attrs) {
+        layout(context, attrs, Size.NORMAL);
+    }
+
+    private void layout(Context context, Size size) {
+        layout(context, null, size);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void layout(Context context, AttributeSet attrs, Size size) {
         inflate(context, R.layout.fast_scroller, this);
 
         setClipChildren(false);
@@ -691,6 +725,8 @@ public class FastScroller extends LinearLayout {
         trackView = findViewById(R.id.fastscroll_track);
         scrollbar = findViewById(R.id.fastscroll_scrollbar);
 
+        bubbleSize = size;
+
         @ColorInt int bubbleColor = Color.GRAY;
         @ColorInt int handleColor = Color.DKGRAY;
         @ColorInt int trackColor = Color.LTGRAY;
@@ -700,7 +736,7 @@ public class FastScroller extends LinearLayout {
         boolean showBubble = true;
         boolean showTrack = false;
 
-        float textSize = getResources().getDimension(R.dimen.fastscroll_bubble_text_size);
+        float textSize = getResources().getDimension(size.textSizeId);
 
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FastScroller, 0, 0);
@@ -711,10 +747,15 @@ public class FastScroller extends LinearLayout {
                     handleColor = typedArray.getColor(R.styleable.FastScroller_handleColor, handleColor);
                     trackColor = typedArray.getColor(R.styleable.FastScroller_trackColor, trackColor);
                     textColor = typedArray.getColor(R.styleable.FastScroller_bubbleTextColor, textColor);
-                    textSize = typedArray.getDimension(R.styleable.FastScroller_bubbleTextSize, textSize);
                     hideScrollbar = typedArray.getBoolean(R.styleable.FastScroller_hideScrollbar, hideScrollbar);
                     showBubble = typedArray.getBoolean(R.styleable.FastScroller_showBubble, showBubble);
                     showTrack = typedArray.getBoolean(R.styleable.FastScroller_showTrack, showTrack);
+
+                    int sizeOrdinal = typedArray.getInt(R.styleable.FastScroller_bubbleSize, size.ordinal());
+                    bubbleSize = Size.fromOrdinal(sizeOrdinal);
+
+                    textSize = typedArray.getDimension(R.styleable.FastScroller_bubbleTextSize,
+                            getResources().getDimension(bubbleSize.textSizeId));
                 } finally {
                     typedArray.recycle();
                 }
