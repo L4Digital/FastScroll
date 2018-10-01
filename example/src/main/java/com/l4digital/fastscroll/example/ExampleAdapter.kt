@@ -16,18 +16,19 @@
 
 package com.l4digital.fastscroll.example
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+
+import androidx.recyclerview.widget.RecyclerView
 
 import com.l4digital.fastscroll.FastScroller
 
 import java.util.ArrayList
 
 class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
-    FastScroller.SectionIndexer {
+        FastScroller.SectionIndexer {
 
     private val itemList: MutableList<String> = ArrayList()
 
