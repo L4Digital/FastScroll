@@ -41,6 +41,6 @@ android {
 
 dependencies {
     implementation project(':fastscroll')
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
