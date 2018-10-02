@@ -1,5 +1,5 @@
 # FastScroll
-[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html) [![Download](https://img.shields.io/badge/JCenter-2.0.0‒beta2-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
+[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html) [![Download](https://img.shields.io/badge/JCenter-2.0.0‒beta3-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
 
 A ListView-like FastScroller for Android’s RecyclerView.
 
@@ -15,7 +15,7 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 #### Gradle:
 ~~~groovy
 dependencies {
-    implementation 'com.l4digital.fastscroll:fastscroll:2.0.0-beta2'
+    implementation 'com.l4digital.fastscroll:fastscroll:2.0.0-beta3'
 }
 ~~~
 
@@ -24,7 +24,7 @@ dependencies {
 <dependency>
   <groupId>com.l4digital.fastscroll</groupId>
   <artifactId>fastscroll</artifactId>
-  <version>2.0.0-beta2</version>
+  <version>2.0.0-beta3</version>
 </dependency>
 ~~~
 
@@ -89,7 +89,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 Add the `FastScrollView` to your xml layout and set your customizations using attributes.
 
 ~~~xml
-<android.support.v4.widget.SwipeRefreshLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -103,7 +103,7 @@ Add the `FastScrollView` to your xml layout and set your customizations using at
         app:bubbleTextColor="#ffffff"
         app:handleColor="#999999" />
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 ~~~
 
 `FastScrollView` contains a `RecyclerView` and a `FastScroller` that can be accessed with public methods.
@@ -151,7 +151,7 @@ The following attributes can be set to customize the visibility and appearance o
 
 
 ## License
-    Copyright 2018 L4 Digital LLC. All rights reserved.
+    Copyright 2018 L4 Digital. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
