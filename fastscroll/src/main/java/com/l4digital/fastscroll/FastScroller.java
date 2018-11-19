@@ -498,13 +498,7 @@ public class FastScroller extends LinearLayout {
         }
 
         DrawableCompat.setTint(bubbleImage, bubbleColor);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            bubbleView.setBackground(bubbleImage);
-        } else {
-            //noinspection deprecation
-            bubbleView.setBackgroundDrawable(bubbleImage);
-        }
+        ViewCompat.setBackground(bubbleView, bubbleImage);
     }
 
     /**
@@ -728,10 +722,12 @@ public class FastScroller extends LinearLayout {
 
         bubbleSize = size;
 
-        @ColorInt int bubbleColor = Color.GRAY;
-        @ColorInt int handleColor = Color.DKGRAY;
-        @ColorInt int trackColor = Color.LTGRAY;
-        @ColorInt int textColor = Color.WHITE;
+        final int accent = getColorAttr(context, R.attr.colorAccent);
+        final int transparent = ContextCompat.getColor(context, android.R.color.transparent);
+        @ColorInt int bubbleColor = accent;
+        @ColorInt int handleColor = accent;
+        @ColorInt int trackColor = transparent;
+        @ColorInt int textColor = transparent;
 
         boolean hideScrollbar = true;
         boolean showBubble = true;
@@ -773,6 +769,13 @@ public class FastScroller extends LinearLayout {
 
         bubbleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
+
+    private static int getColorAttr(Context context, int attrId) {
+        final TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attrId, typedValue, true);
+        return typedValue.data;
+    }
+
 
     /**
      * A FastScrollListener can be added to a {@link FastScroller} to receive messages when a
