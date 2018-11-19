@@ -726,7 +726,7 @@ public class FastScroller extends LinearLayout {
         @ColorInt int bubbleColor = accent;
         @ColorInt int handleColor = accent;
         @ColorInt int trackColor = Color.LTGRAY;
-        @ColorInt int textColor = Color.WHITE;
+        @ColorInt int textColor = getColorAttr(context, android.R.attr.textColorPrimary);
 
         boolean hideScrollbar = true;
         boolean showBubble = true;
