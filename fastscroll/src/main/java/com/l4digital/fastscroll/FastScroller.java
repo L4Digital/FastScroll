@@ -197,7 +197,7 @@ public class FastScroller extends LinearLayout {
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-            if (event.getX() < handleView.getX() - ViewCompat.getPaddingStart(handleView)) {
+            if (event.getX() < handleView.getX() - ViewCompat.getPaddingStart(scrollbar)) {
                 return false;
             }
 
