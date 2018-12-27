@@ -498,13 +498,7 @@ public class FastScroller extends LinearLayout {
         }
 
         DrawableCompat.setTint(bubbleImage, bubbleColor);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            bubbleView.setBackground(bubbleImage);
-        } else {
-            //noinspection deprecation
-            bubbleView.setBackgroundDrawable(bubbleImage);
-        }
+        ViewCompat.setBackground(bubbleView, bubbleImage);
     }
 
     /**
