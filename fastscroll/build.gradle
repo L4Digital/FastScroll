@@ -21,7 +21,7 @@ apply plugin: 'maven-publish'
 def libraryName = 'FastScroll'
 def libraryArtifact = 'fastscroll'
 def libraryGroup = 'com.l4digital.fastscroll'
-def libraryVersion = '2.0.0'
+def libraryVersion = '2.0.1'
 
 android {
     compileSdkVersion rootProject.ext.sdkVersion
