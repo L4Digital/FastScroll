@@ -74,6 +74,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
  * {@link R.styleable#FastScroller_bubbleTextColor}
  * {@link R.styleable#FastScroller_bubbleTextSize}
  */
+@SuppressWarnings("JavadocReference")
 public class FastScroller extends LinearLayout {
 
     public enum Size {
@@ -133,12 +134,12 @@ public class FastScroller extends LinearLayout {
     private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
 
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             if (!handleView.isSelected() && isEnabled()) {
                 setViewPositions(getScrollProportion(recyclerView));
             }
 
-            if (swipeRefreshLayout != null) {
+            if (swipeRefreshLayout != null && recyclerView.getLayoutManager() != null) {
                 int firstVisibleItem = findFirstVisibleItemPosition(recyclerView.getLayoutManager());
                 int topPosition = recyclerView.getChildCount() == 0 ? 0 : recyclerView.getChildAt(0).getTop();
                 swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topPosition >= 0);
@@ -146,7 +147,7 @@ public class FastScroller extends LinearLayout {
         }
 
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
 
             if (isEnabled()) {
@@ -526,7 +527,7 @@ public class FastScroller extends LinearLayout {
     }
 
     private void setRecyclerViewPosition(float y) {
-        if (recyclerView != null && recyclerView.getAdapter() != null) {
+        if (recyclerView != null && recyclerView.getAdapter() != null && recyclerView.getLayoutManager() != null) {
             int itemCount = recyclerView.getAdapter().getItemCount();
             float proportion;
 
