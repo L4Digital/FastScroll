@@ -29,8 +29,9 @@ class ExampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
 
-        val recyclerView: FastScrollRecyclerView? = findViewById(R.id.recycler_view)
-        recyclerView?.layoutManager = LinearLayoutManager(this)
-        recyclerView?.adapter = ExampleAdapter()
+        findViewById<FastScrollRecyclerView>(R.id.recycler_view)?.apply {
+            layoutManager = LinearLayoutManager(this@ExampleActivity)
+            adapter = ExampleAdapter()
+        }
     }
 }

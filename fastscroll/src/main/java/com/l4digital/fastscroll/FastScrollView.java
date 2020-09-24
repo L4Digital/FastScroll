@@ -80,7 +80,7 @@ public class FastScrollView extends FrameLayout {
      *
      * @param adapter The new {@link RecyclerView.Adapter} to set, or null to set none
      */
-    public void setAdapter(@Nullable RecyclerView.Adapter adapter) {
+    public <VH extends RecyclerView.ViewHolder> void setAdapter(@Nullable RecyclerView.Adapter<VH> adapter) {
         recyclerView.setAdapter(adapter);
 
         if (adapter instanceof FastScroller.SectionIndexer) {

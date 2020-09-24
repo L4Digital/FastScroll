@@ -74,7 +74,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
  * {@link R.styleable#FastScroller_bubbleTextColor}
  * {@link R.styleable#FastScroller_bubbleTextSize}
  */
-@SuppressWarnings("JavadocReference")
 public class FastScroller extends LinearLayout {
 
     public enum Size {
