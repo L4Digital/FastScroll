@@ -779,12 +779,12 @@ public class FastScroller extends LinearLayout {
         /**
          * Called when fast scrolling begins.
          */
-        void onFastScrollStart(FastScroller fastScroller);
+        void onFastScrollStart(@NonNull FastScroller fastScroller);
 
         /**
          * Called when fast scrolling ends.
          */
-        void onFastScrollStop(FastScroller fastScroller);
+        void onFastScrollStop(@NonNull FastScroller fastScroller);
     }
 
     /**
