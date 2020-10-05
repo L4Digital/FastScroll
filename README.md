@@ -135,6 +135,27 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 #### Alternative Usage:
 If you are unable to use the `FastScrollRecyclerView` or `FastScrollView`, you can add a `FastScroller` to your layout and implement with any `RecyclerView`. See this [github issue](https://github.com/L4Digital/FastScroll/issues/4#issuecomment-256975634) for an example.
 
+#### FastScrollListener:
+An optional `FastScrollListener` can be added to receive messages when fast scrolling starts or stops.
+
+~~~kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_example)
+
+    val recyclerView: FastScrollRecyclerView? = findViewById(R.id.recycler_view)
+    recyclerView?.setFastScrollListener(object : FastScroller.FastScrollListener {
+        override fun onFastScrollStart(fastScroller: FastScroller) {
+            // fast scroll started
+        }
+
+        override fun onFastScrollStop(fastScroller: FastScroller) {
+            // fast scroll stopped
+        }
+    })
+}
+~~~
+
 
 ## Customization
 The following attributes can be set to customize the visibility and appearance of the elements within the FastScroller view:
