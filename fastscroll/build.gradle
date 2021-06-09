@@ -15,7 +15,6 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
 def libraryName = 'FastScroll'
@@ -38,14 +37,14 @@ android {
 }
 
 dependencies {
-    api 'androidx.constraintlayout:constraintlayout:2.0.1'
+    api 'androidx.constraintlayout:constraintlayout:2.0.4'
     api 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
-    api 'androidx.recyclerview:recyclerview:1.1.0'
+    api 'androidx.recyclerview:recyclerview:1.2.1'
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from android.sourceSets.main.java.srcDirs
 }
 
@@ -55,7 +54,7 @@ task javadoc(type: Javadoc) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 
@@ -104,26 +103,6 @@ publishing {
 
             artifact sourcesJar
             artifact javadocJar
-        }
-    }
-}
-
-bintray {
-    user = project.findProperty("bintray_user") ?: ""
-    key = project.findProperty("bintray_apikey") ?: ""
-
-    publications = ['aar', 'java']
-
-    pkg {
-        name = libraryName
-        repo = 'maven'
-        userOrg = 'l4digital'
-        licenses = ['Apache-2.0']
-
-        version {
-            name = libraryVersion
-            vcsTag = libraryVersion
-            released = new Date()
         }
     }
 }
