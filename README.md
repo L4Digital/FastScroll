@@ -1,5 +1,5 @@
 # FastScroll
-[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html) [![Download](https://img.shields.io/badge/JCenter-2.0.1-brightgreen.svg?style=flat-square)](https://bintray.com/l4digital/maven/FastScroll/_latestVersion)
+[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-14%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.html) [![Download](https://img.shields.io/badge/JitPack-2.0.1-brightgreen.svg?style=flat-square)](https://jitpack.io/#L4Digital/FastScroll/2.0.1)
 
 A ListView-like FastScroller for Android’s RecyclerView.
 
@@ -13,17 +13,34 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 ## Download
 
 #### Gradle:
+`project/build.gradle`
+~~~groovy
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+~~~
+`module/build.gradle`
 ~~~groovy
 dependencies {
-    implementation 'com.l4digital.fastscroll:fastscroll:2.0.1'
+    implementation 'com.github.L4Digital:FastScroll:2.0.1'
 }
 ~~~
 
 #### Maven:
 ~~~xml
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+~~~
+~~~xml
 <dependency>
-  <groupId>com.l4digital.fastscroll</groupId>
-  <artifactId>fastscroll</artifactId>
+  <groupId>com.github.L4Digital</groupId>
+  <artifactId>FastScroll</artifactId>
   <version>2.0.1</version>
 </dependency>
 ~~~
