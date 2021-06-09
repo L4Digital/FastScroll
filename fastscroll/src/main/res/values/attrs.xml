@@ -20,6 +20,7 @@
     <declare-styleable name="FastScroller">
         <attr format="boolean" name="hideScrollbar" />
         <attr format="boolean" name="showBubble" />
+        <attr format="boolean" name="showBubbleAlways" />
         <attr format="boolean" name="showTrack" />
         <attr format="color" name="bubbleColor" />
         <attr format="color" name="bubbleTextColor" />
