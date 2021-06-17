@@ -161,7 +161,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
 The following attributes can be set to customize the visibility and appearance of the elements within the FastScroller view:
 
 * `app:hideScrollbar=["true" | "false"]` *Hides the scrollbar when not scrolling*
-* `app:showBubble=["true" | "false"]` *Shows the section bubble while scrolling*
+* `app:showBubble=["true" | "false"]` *Shows the section bubble while fast scrolling*
+* `app:showBubbleAlways=["true" | "false"]` *Shows the section bubble while scrolling*
 * `app:showTrack=["true" | "false"]` *Shows the scroll track while scrolling*
 * `app:handleColor=["#rrggbb" | "@color"]` *Sets the color of the scroll handle*
 * `app:trackColor=["#rrggbb" | "@color"]` *Sets the color of the scroll track*

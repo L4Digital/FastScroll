@@ -106,6 +106,7 @@ public class FastScroller extends LinearLayout {
     private int viewHeight;
     private boolean hideScrollbar;
     private boolean showBubble;
+    private boolean showBubbleAlways;
     private Drawable bubbleImage;
     private Drawable handleImage;
     private Drawable trackImage;
@@ -122,12 +123,9 @@ public class FastScroller extends LinearLayout {
     private FastScrollListener fastScrollListener;
     private SectionIndexer sectionIndexer;
 
-    private final Runnable scrollbarHider = new Runnable() {
-
-        @Override
-        public void run() {
-            hideScrollbar();
-        }
+    private final Runnable scrollbarHider = () -> {
+        hideBubble();
+        hideScrollbar();
     };
 
     private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
@@ -135,7 +133,13 @@ public class FastScroller extends LinearLayout {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             if (!handleView.isSelected() && isEnabled()) {
-                setViewPositions(getScrollProportion(recyclerView));
+                float y = getScrollProportion(recyclerView);
+                setViewPositions(y);
+
+                if (showBubbleAlways) {
+                    int targetPos = getRecyclerViewTargetPosition(y);
+                    bubbleView.setText(sectionIndexer.getSectionText(targetPos));
+                }
             }
 
             if (swipeRefreshLayout != null && recyclerView.getLayoutManager() != null) {
@@ -157,6 +161,10 @@ public class FastScroller extends LinearLayout {
 
                     if (!isViewVisible(scrollbar)) {
                         showScrollbar();
+                    }
+
+                    if (showBubbleAlways && sectionIndexer != null) {
+                        showBubble();
                     }
 
                     break;
@@ -233,7 +241,9 @@ public class FastScroller extends LinearLayout {
                 getHandler().postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY);
             }
 
-            hideBubble();
+            if (!showBubbleAlways) {
+                hideBubble();
+            }
 
             if (fastScrollListener != null) {
                 fastScrollListener.onFastScrollStop(this);
@@ -358,13 +368,9 @@ public class FastScroller extends LinearLayout {
 
         recyclerView.addOnScrollListener(scrollListener);
 
-        post(new Runnable() {
-
-            @Override
-            public void run() {
-                // set initial positions for bubble and handle
-                setViewPositions(getScrollProportion(FastScroller.this.recyclerView));
-            }
+        post(() -> {
+            // set initial positions for bubble and handle
+            setViewPositions(getScrollProportion(FastScroller.this.recyclerView));
         });
     }
 
@@ -475,9 +481,11 @@ public class FastScroller extends LinearLayout {
      * Show the section bubble while scrolling.
      *
      * @param visible True to show the bubble, false to hide
+     * @param always  True to always show the bubble, false to only show on handle touch
      */
-    public void setBubbleVisible(boolean visible) {
+    public void setBubbleVisible(boolean visible, boolean always) {
         showBubble = visible;
+        showBubbleAlways = visible && always;
     }
 
     /**
@@ -525,7 +533,7 @@ public class FastScroller extends LinearLayout {
         viewHeight = h;
     }
 
-    private void setRecyclerViewPosition(float y) {
+    private int getRecyclerViewTargetPosition(float y) {
         if (recyclerView != null && recyclerView.getAdapter() != null && recyclerView.getLayoutManager() != null) {
             int itemCount = recyclerView.getAdapter().getItemCount();
             float proportion;
@@ -544,7 +552,15 @@ public class FastScroller extends LinearLayout {
                 scrolledItemCount = itemCount - scrolledItemCount;
             }
 
-            int targetPos = getValueInRange(0, itemCount - 1, scrolledItemCount);
+            return getValueInRange(0, itemCount - 1, scrolledItemCount);
+        }
+
+        return 0;
+    }
+
+    private void setRecyclerViewPosition(float y) {
+        if (recyclerView != null && recyclerView.getLayoutManager() != null) {
+            int targetPos = getRecyclerViewTargetPosition(y);
             recyclerView.getLayoutManager().scrollToPosition(targetPos);
 
             if (showBubble && sectionIndexer != null) {
@@ -729,6 +745,7 @@ public class FastScroller extends LinearLayout {
 
         boolean hideScrollbar = true;
         boolean showBubble = true;
+        boolean showBubbleAlways = false;
         boolean showTrack = false;
 
         float textSize = getResources().getDimension(size.textSizeId);
@@ -744,6 +761,7 @@ public class FastScroller extends LinearLayout {
                     textColor = typedArray.getColor(R.styleable.FastScroller_bubbleTextColor, textColor);
                     hideScrollbar = typedArray.getBoolean(R.styleable.FastScroller_hideScrollbar, hideScrollbar);
                     showBubble = typedArray.getBoolean(R.styleable.FastScroller_showBubble, showBubble);
+                    showBubbleAlways = typedArray.getBoolean(R.styleable.FastScroller_showBubbleAlways, showBubbleAlways);
                     showTrack = typedArray.getBoolean(R.styleable.FastScroller_showTrack, showTrack);
 
                     int sizeOrdinal = typedArray.getInt(R.styleable.FastScroller_bubbleSize, size.ordinal());
@@ -762,7 +780,7 @@ public class FastScroller extends LinearLayout {
         setBubbleColor(bubbleColor);
         setBubbleTextColor(textColor);
         setHideScrollbar(hideScrollbar);
-        setBubbleVisible(showBubble);
+        setBubbleVisible(showBubble, showBubbleAlways);
         setTrackVisible(showTrack);
 
         bubbleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
