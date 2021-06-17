@@ -1,2 +1,2 @@
 ./build.sh
-./gradlew bintrayUpload
+./gradlew publishReleasePublicationToSonatypeRepository
