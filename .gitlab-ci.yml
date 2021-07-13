@@ -17,8 +17,6 @@ lint_test:
   stage: test
   except:
     - tags
-  tags:
-    - docker
   artifacts:
     when: always
     expire_in: 6 months
@@ -33,9 +31,7 @@ merge_build:
     - schedules
     - web
     - tags
-    - master
-  tags:
-    - docker
+    - main
   script:
     - ./gradlew assembleRelease
 
@@ -44,14 +40,12 @@ release_build:
   only:
     - schedules
     - web
-    - master
-  tags:
-    - docker
+    - main
   artifacts:
     expire_in: 1 year
     paths:
       - fastscroll/build/outputs/aar/
-      - fastscroll/build/publications/aar/
+      - fastscroll/build/publications/release/
   script:
-    - ./gradlew generatePomFileForAarPublication
+    - ./gradlew generateArchives
     - ./gradlew assembleRelease
