@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 L4 Digital. All rights reserved.
+ * Copyright 2022 Randy Webster. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlinVersion = '1.5.20'
-    ext.sdkVersion = 30
+    ext.kotlinVersion = '1.6.10'
+    ext.sdkVersion = 31
 
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
@@ -27,7 +27,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
