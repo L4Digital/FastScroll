@@ -1,6 +1,9 @@
 name: Build checks
 
-on: [push]
+on:
+  push:
+    branches:
+      - '**'
 
 jobs:
   lint:
