@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 L4 Digital. All rights reserved.
+ * Copyright 2022 Randy Webster. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,12 @@ android {
         versionName '1.0'
     }
 
+    lint {
+        quiet false
+        abortOnError true
+        warningsAsErrors true
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -43,6 +49,6 @@ android {
 
 dependencies {
     implementation project(':fastscroll')
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }

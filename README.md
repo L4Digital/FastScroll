@@ -172,7 +172,7 @@ The following attributes can be set to customize the visibility and appearance o
 
 
 ## License
-    Copyright 2018 L4 Digital. All rights reserved.
+    Copyright 2022 Randy Webster. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

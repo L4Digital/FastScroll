@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2018 L4 Digital. All rights reserved.
+  ~ Copyright 2022 Randy Webster. All rights reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 <resources>
 
     <!-- Color Definitions - ONLY USE TO DEFINE OTHER COLORS -->
-    <color name="theme_gray_1">#313131</color>
-    <color name="theme_gray_2">#999999</color>
+    <color name="theme_gray_1">#999999</color>
     <color name="theme_orange_1">#f36807</color>
     <color name="theme_orange_2">#bf5926</color>
     <color name="theme_white_1">#ffffff</color>
@@ -31,7 +30,7 @@
 
     <!-- Fast Scroll -->
     <color name="fastscroll_bubble">@color/theme_orange_1</color>
-    <color name="fastscroll_handle">@color/theme_gray_2</color>
+    <color name="fastscroll_handle">@color/theme_gray_1</color>
     <color name="fastscroll_text">@color/theme_white_1</color>
 
 </resources>
