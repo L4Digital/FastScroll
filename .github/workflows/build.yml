@@ -30,3 +30,17 @@ jobs:
           java-version: 11
       - name: Build
         run: ./gradlew assembleRelease
+
+  archive:
+    name: generateArchives
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 11
+      - name: Source and javadoc jars
+        run: ./gradlew generateArchives

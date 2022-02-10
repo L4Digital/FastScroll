@@ -79,6 +79,7 @@ public class FastScrollView extends FrameLayout {
      * to provide child views for the RecyclerView and section text for the FastScroller.
      *
      * @param adapter The new {@link RecyclerView.Adapter} to set, or null to set none
+     * @param <VH> The generic {@link RecyclerView.ViewHolder} associated with the adapter
      */
     public <VH extends RecyclerView.ViewHolder> void setAdapter(@Nullable RecyclerView.Adapter<VH> adapter) {
         recyclerView.setAdapter(adapter);

@@ -407,7 +407,7 @@ public class FastScroller extends LinearLayout {
     /**
      * Set a {@link SwipeRefreshLayout} to disable when the {@link RecyclerView} is scrolled away from the top.
      * <p>
-     * Required when {@link Build.VERSION#SDK_INT} < {@value Build.VERSION_CODES#LOLLIPOP}, otherwise use
+     * Required when SDK target precedes {@value Build.VERSION_CODES#LOLLIPOP}, otherwise use
      * {@link View#setNestedScrollingEnabled(boolean) setNestedScrollingEnabled(true)}.
      *
      * @param swipeRefreshLayout The {@link SwipeRefreshLayout} to set, or null to set none
@@ -796,11 +796,13 @@ public class FastScroller extends LinearLayout {
 
         /**
          * Called when fast scrolling begins.
+         * @param fastScroller The {@link FastScroller} with this event
          */
         void onFastScrollStart(@NonNull FastScroller fastScroller);
 
         /**
          * Called when fast scrolling ends.
+         * @param fastScroller The {@link FastScroller} with this event
          */
         void onFastScrollStop(@NonNull FastScroller fastScroller);
     }
