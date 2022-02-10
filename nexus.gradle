@@ -1,9 +1,9 @@
 ext['ossrhUsername'] = ''
 ext['ossrhPassword'] = ''
 ext['sonatypeStagingProfileId'] = ''
+ext['signing.key'] = ''
 ext['signing.keyId'] = ''
 ext['signing.password'] = ''
-ext['signing.secretKeyFile'] = ''
 
 File secretPropsFile = rootProject.file('local.properties')
 
@@ -17,9 +17,9 @@ if (secretPropsFile.exists()) {
     ext['ossrhUsername'] = System.getenv('OSSRH_USERNAME')
     ext['ossrhPassword'] = System.getenv('OSSRH_PASSWORD')
     ext['sonatypeStagingProfileId'] = System.getenv('STAGING_PROFILE_ID')
+    ext['signing.key'] = System.getenv('SIGNING_KEY')
     ext['signing.keyId'] = System.getenv('SIGNING_KEY_ID')
     ext['signing.password'] = System.getenv('SIGNING_PASSWORD')
-    ext['signing.secretKeyFile'] = System.getenv('SIGNING_SECRET_KEY_FILE')
 }
 
 // Set up Sonatype repository
