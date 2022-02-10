@@ -147,7 +147,17 @@ public class FastScrollRecyclerView extends RecyclerView {
      * @param visible True to show the bubble, false to hide
      */
     public void setBubbleVisible(boolean visible) {
-        fastScroller.setBubbleVisible(visible);
+        setBubbleVisible(visible, false);
+    }
+
+    /**
+     * Show the section bubble while scrolling.
+     *
+     * @param visible True to show the bubble, false to hide
+     * @param always  True to always show the bubble, false to only show on handle touch
+     */
+    public void setBubbleVisible(boolean visible, boolean always) {
+        fastScroller.setBubbleVisible(visible, always);
     }
 
     /**
