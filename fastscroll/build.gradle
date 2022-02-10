@@ -24,7 +24,7 @@ ext {
     LIBRARY_PATH = 'github.com/L4Digital/FastScroll'
     LIBRARY_ARTIFACT = 'fastscroll'
     LIBRARY_GROUP = 'io.github.l4digital'
-    LIBRARY_VERSION = '2.0.1'
+    LIBRARY_VERSION = '2.1.0'
 }
 
 android {
