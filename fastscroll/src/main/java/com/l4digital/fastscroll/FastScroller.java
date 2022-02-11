@@ -57,7 +57,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
  * A ListView-like FastScroller for the {@link RecyclerView}.
  * <p>
  * FastScroller provides the fast scrolling and section indexing for a RecyclerView,
- * with a Lollipop styled scrollbar and section “bubble” view. The scrollbar provides
+ * with a Lollipop styled scrollbar and section "bubble" view. The scrollbar provides
  * a handle for quickly navigating the list while the bubble view displays the
  * currently visible section index.
  * <p>

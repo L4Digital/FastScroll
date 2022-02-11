@@ -9,41 +9,32 @@ jobs:
   lint:
     name: lintRelease
     runs-on: ubuntu-20.04
+    container:
+      image: randr0id/android-docker:31
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: adopt
-          java-version: 11
       - name: Lint checks
         run: ./gradlew lintRelease
 
   build:
     name: assembleRelease
     runs-on: ubuntu-20.04
+    container:
+      image: randr0id/android-docker:31
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: adopt
-          java-version: 11
-      - name: Build
+      - name: Release build
         run: ./gradlew assembleRelease
 
   archive:
     name: generateArchives
     runs-on: ubuntu-20.04
+    container:
+      image: randr0id/android-docker:31
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: adopt
-          java-version: 11
-      - name: Source and javadoc jars
+      - name: Generate source and javadoc jars
         run: ./gradlew generateArchives
