@@ -24,6 +24,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.l4digital.fastscroll.FastScroller
 
+@Suppress("MagicNumber")
 class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
     FastScroller.SectionIndexer {
 

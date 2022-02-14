@@ -1,5 +1,5 @@
 # FastScroll
-[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.1.html) [![Download](https://img.shields.io/maven-central/v/io.github.l4digital/fastscroll.svg?style=flat-square)](https://search.maven.org/artifact/io.github.l4digital/fastscroll) [![Workflow](https://github.com/L4Digital/FastScroll/actions/workflows/build.yml/badge.svg)](https://github.com/L4Digital/FastScroll/actions/workflows/build.yml)
+[![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0) [![API](https://img.shields.io/badge/API-16%2B-green.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.1.html) [![Download](https://img.shields.io/maven-central/v/io.github.l4digital/fastscroll.svg?style=flat-square)](https://search.maven.org/artifact/io.github.l4digital/fastscroll) [![Workflow](https://github.com/L4Digital/FastScroll/actions/workflows/checks.yml/badge.svg)](https://github.com/L4Digital/FastScroll/actions/workflows/checks.yml)
 
 A ListView-like FastScroller for Android’s RecyclerView.
 
