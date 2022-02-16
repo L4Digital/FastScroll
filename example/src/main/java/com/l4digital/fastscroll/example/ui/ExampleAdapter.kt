@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example
+package com.l4digital.fastscroll.example.ui
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.l4digital.fastscroll.FastScroller
+import com.l4digital.fastscroll.example.databinding.ItemExampleBinding
 
 @Suppress("MagicNumber")
 class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
@@ -43,7 +42,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = getLayoutInflater(parent.context)
-        return ViewHolder(inflater.inflate(R.layout.item_example, parent, false))
+        return ViewHolder(ItemExampleBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -57,12 +56,10 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
     private fun getLayoutInflater(context: Context) =
         layoutInflater ?: LayoutInflater.from(context).also { layoutInflater = it }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val textView = itemView as TextView
+    class ViewHolder(private val binding: ItemExampleBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: String) {
-            textView.text = item
+            binding.root.text = item
         }
     }
 }

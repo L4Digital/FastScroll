@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example
+package com.l4digital.fastscroll.example.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.l4digital.fastscroll.FastScrollRecyclerView
+import com.l4digital.fastscroll.example.R
+import com.l4digital.fastscroll.example.databinding.ActivityExampleBinding
+import com.l4digital.fastscroll.example.extension.viewBinding
 
 class ExampleActivity : AppCompatActivity() {
+
+    private val viewBinding by viewBinding(ActivityExampleBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
 
-        findViewById<FastScrollRecyclerView>(R.id.recycler_view)?.apply {
+        viewBinding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@ExampleActivity)
             adapter = ExampleAdapter()
         }
