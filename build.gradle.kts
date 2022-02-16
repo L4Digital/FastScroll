@@ -14,38 +14,45 @@
  * limitations under the License.
  */
 
+import extension.startsWithAny
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlinVersion = '1.6.10'
-    ext.sdkVersion = 31
-
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        google()
-        mavenCentral()
-    }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.1'
-        classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
     }
 }
 
-apply plugin: 'io.github.gradle-nexus.publish-plugin'
-apply from: 'nexus.gradle'
+plugins {
+    id("org.gradle.android.cache-fix") version "2.4.6" apply false
+    script("detekt")
+    script("nexus")
+}
 
 allprojects {
     repositories {
-        google()
+        google() {
+            content {
+                includeGroupByRegex("androidx.*")
+                includeGroupByRegex("com\\.android.*")
+            }
+        }
+
         mavenCentral()
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+subprojects {
+    plugin("org.gradle.android.cache-fix")
+    script("detekt")
 }
+
+buildScan {
+    // capture kapt and gradle properties with each build scan
+    properties.filterKeys { it.startsWithAny("android", "kapt", "org.gradle") }
+        .toSortedMap().entries
+        .forEach { value(it.key, it.value.toString()) }
+}
+
+tasks.register<Delete>("clean") { delete(rootProject.buildDir) }

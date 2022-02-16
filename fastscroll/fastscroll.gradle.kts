@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example
+import extension.defaultLintOptions
+import extension.defaultSdkVersions
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.l4digital.fastscroll.FastScrollRecyclerView
+plugins {
+    android("library")
+}
 
-class ExampleActivity : AppCompatActivity() {
+android {
+    defaultSdkVersions()
+    defaultLintOptions()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_example)
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
 
-        findViewById<FastScrollRecyclerView>(R.id.recycler_view)?.apply {
-            layoutManager = LinearLayoutManager(this@ExampleActivity)
-            adapter = ExampleAdapter()
-        }
+    publishing {
+        singleVariant("release")
     }
 }
+
+dependencies {
+    api(libs.androidx.recyclerview)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.coordinatorlayout)
+    implementation(libs.androidx.swiperefreshlayout)
+}
+
+script("publish")

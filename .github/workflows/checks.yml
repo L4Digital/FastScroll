@@ -6,6 +6,22 @@ on:
       - '**'
 
 jobs:
+  detekt:
+    name: detektAll
+    runs-on: ubuntu-20.04
+    container:
+      image: randr0id/android-docker:31
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Detekt checks
+        run: ./gradlew detektAll
+      - name: Archive Detekt report
+        uses: actions/upload-artifact@v2
+        with:
+          name: detekt-report
+          path: build/reports/codestyle/*.html
+
   lint:
     name: lintRelease
     runs-on: ubuntu-20.04
@@ -16,6 +32,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Lint checks
         run: ./gradlew lintRelease
+      - name: Archive Lint report
+        uses: actions/upload-artifact@v2
+        with:
+          name: lint-report
+          path: ./**/build/reports/lint*.html
 
   build:
     name: assembleRelease

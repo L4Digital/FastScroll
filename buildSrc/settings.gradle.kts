@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example
+@file:Suppress("InvalidPackageDeclaration")
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.l4digital.fastscroll.FastScrollRecyclerView
-
-class ExampleActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_example)
-
-        findViewById<FastScrollRecyclerView>(R.id.recycler_view)?.apply {
-            layoutManager = LinearLayoutManager(this@ExampleActivity)
-            adapter = ExampleAdapter()
-        }
+dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
+    versionCatalogs {
+        create("libs") { from(files("../gradle/libs.versions.toml")) }
     }
 }
