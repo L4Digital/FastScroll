@@ -19,6 +19,7 @@ import extension.defaultSdkVersions
 
 plugins {
     `android-library`
+    `kotlin-android`
 }
 
 android {
@@ -29,13 +30,20 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     publishing {
         singleVariant("release")
     }
 }
 
 dependencies {
+    implementation(libs.kotlin.stdlib.jdk8)
+
     api(libs.androidx.recyclerview)
+    implementation(libs.androidx.ktx)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.coordinatorlayout)
     implementation(libs.androidx.swiperefreshlayout)
