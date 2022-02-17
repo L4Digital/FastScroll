@@ -19,8 +19,9 @@ package com.l4digital.fastscroll.example.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.l4digital.fastscroll.example.R
 import com.l4digital.fastscroll.example.databinding.ActivityExampleBinding
+import com.l4digital.fastscroll.example.extension.context
+import com.l4digital.fastscroll.example.extension.setContentView
 import com.l4digital.fastscroll.example.extension.viewBinding
 
 class ExampleActivity : AppCompatActivity() {
@@ -29,11 +30,9 @@ class ExampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_example)
-
-        viewBinding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@ExampleActivity)
-            adapter = ExampleAdapter()
+        viewBinding.setContentView(this).apply {
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.adapter = ExampleAdapter()
         }
     }
 }

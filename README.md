@@ -66,9 +66,10 @@ override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_example)
 
-    val recyclerView: FastScrollRecyclerView? = findViewById(R.id.recycler_view)
-    recyclerView?.layoutManager = LinearLayoutManager(this)
-    recyclerView?.adapter = ExampleAdapter()
+    findViewById<FastScrollRecyclerView>(R.id.recycler_view).apply {
+        layoutManager = LinearLayoutManager(context)
+        adapter = ExampleAdapter()
+    }
 }
 ~~~
 
@@ -77,7 +78,7 @@ Implement the `FastScroller.SectionIndexer` interface in your RecyclerView Adapt
 ~~~kotlin
 class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
 
-    ...
+    // ...
 
     override fun getSectionText(position: Int): CharSequence {
         return getItem(position).getIndex()
@@ -113,9 +114,10 @@ override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_example)
 
-    val fastScrollView: FastScrollView? = findViewById(R.id.fastscroll_view)
-    fastScrollView?.setLayoutManager(LinearLayoutManager(this))
-    fastScrollView?.setAdapter(ExampleAdapter())
+    findViewById<FastScrollView>(R.id.fastscroll_view).apply {
+        setLayoutManager(LinearLayoutManager(context))
+        setAdapter(ExampleAdapter())
+    }
 }
 ~~~
 
@@ -124,7 +126,7 @@ Implement the `FastScroller.SectionIndexer` interface in your RecyclerView Adapt
 ~~~kotlin
 class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
 
-    ...
+    // ...
 
     override fun getSectionText(position: Int): CharSequence {
         return getItem(position).getIndex()
@@ -143,16 +145,17 @@ override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_example)
 
-    val recyclerView: FastScrollRecyclerView? = findViewById(R.id.recycler_view)
-    recyclerView?.setFastScrollListener(object : FastScroller.FastScrollListener {
-        override fun onFastScrollStart(fastScroller: FastScroller) {
-            // fast scroll started
-        }
+    findViewById<FastScrollRecyclerView>(R.id.recycler_view).apply {
+        setFastScrollListener(object : FastScroller.FastScrollListener {
+            override fun onFastScrollStart(fastScroller: FastScroller) {
+                // fast scroll started
+            }
 
-        override fun onFastScrollStop(fastScroller: FastScroller) {
-            // fast scroll stopped
-        }
-    })
+            override fun onFastScrollStop(fastScroller: FastScroller) {
+                // fast scroll stopped
+            }
+        })
+    }
 }
 ~~~
 
