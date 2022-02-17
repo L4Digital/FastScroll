@@ -16,7 +16,6 @@
 
 package com.l4digital.fastscroll.example.ui
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,12 +23,9 @@ import com.l4digital.fastscroll.FastScroller
 import com.l4digital.fastscroll.example.databinding.ItemExampleBinding
 
 @Suppress("MagicNumber")
-class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
-    FastScroller.SectionIndexer {
+class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
 
     private val itemList = mutableListOf<String>()
-
-    private var layoutInflater: LayoutInflater? = null
 
     init {
         repeat(26) { i ->
@@ -41,7 +37,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = getLayoutInflater(parent.context)
+        val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemExampleBinding.inflate(inflater, parent, false))
     }
 
@@ -52,9 +48,6 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(),
     override fun getItemCount() = itemList.size
 
     override fun getSectionText(position: Int) = itemList[position][0].toString()
-
-    private fun getLayoutInflater(context: Context) =
-        layoutInflater ?: LayoutInflater.from(context).also { layoutInflater = it }
 
     class ViewHolder(private val binding: ItemExampleBinding) : RecyclerView.ViewHolder(binding.root) {
 
