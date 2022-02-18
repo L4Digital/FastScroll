@@ -18,8 +18,8 @@ import extension.defaultLintOptions
 import extension.defaultSdkVersions
 
 plugins {
-    android("application")
-    kotlin("android")
+    android
+    `kotlin-android`
 }
 
 android {
@@ -52,8 +52,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":fastscroll"))
     implementation(libs.kotlin.stdlib.jdk8)
+
+    implementation(project(":fastscroll"))
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ktx)

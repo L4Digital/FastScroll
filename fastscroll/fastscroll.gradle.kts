@@ -18,7 +18,7 @@ import extension.defaultLintOptions
 import extension.defaultSdkVersions
 
 plugins {
-    android("library")
+    `android-library`
 }
 
 android {
