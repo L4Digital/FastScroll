@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
     id("com.gradle.enterprise") version ("3.8.1")

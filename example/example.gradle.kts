@@ -54,7 +54,7 @@ android {
 dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
 
-    implementation(project(":fastscroll"))
+    implementation(projects.fastscroll)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ktx)
