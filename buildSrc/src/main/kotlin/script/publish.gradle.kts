@@ -16,23 +16,23 @@
 
 package script
 
+import extension.getTask
 import extension.releaseSourceSets
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     `android-library`
     `maven-publish`
+    org.jetbrains.dokka
     signing
 }
 
-val javadoc by tasks.register<Javadoc>("javadoc") {
-    setSource(android.sourceSets["main"].java.srcDirs)
-    classpath += files(android.bootClasspath.joinToString(separator = File.pathSeparator))
-}
+val javadoc get() = getTask<DokkaTask>("dokkaJavadoc")
 
 val javadocJar by tasks.register<Jar>("javadocJar") {
     dependsOn(javadoc)
     archiveClassifier.set("javadoc")
-    from(javadoc.destinationDir)
+    from(javadoc.outputDirectory)
 }
 
 @Suppress("SpreadOperator")
@@ -41,6 +41,8 @@ val sourcesJar by tasks.register<Jar>("sourcesJar") {
     val sources = android.releaseSourceSets.map { it.java.srcDirs }
     from(*sources.toTypedArray())
 }
+
+tasks.withType<DokkaTask>().configureEach { suppressInheritedMembers.set(true) }
 
 tasks.register("generateArchives") { dependsOn(sourcesJar, javadocJar) }
 
@@ -53,10 +55,6 @@ group = Publish.Info.group
 version = Publish.Info.semantic.version
 
 afterEvaluate {
-    javadoc.classpath += files(android.libraryVariants.map { variant ->
-        variant.javaCompileProvider.get().classpath
-    })
-
     publishing {
         publications {
             create<MavenPublication>("release") {
