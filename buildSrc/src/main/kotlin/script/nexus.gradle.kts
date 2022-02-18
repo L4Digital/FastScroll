@@ -20,7 +20,7 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("io.github.gradle-nexus.publish-plugin")
+   io.github.`gradle-nexus`.`publish-plugin`
 }
 
 val secretPropsFile = file("local.properties")

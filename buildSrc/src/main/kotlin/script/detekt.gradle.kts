@@ -21,7 +21,7 @@ import extension.getModuleSources
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    id("io.gitlab.arturbosch.detekt")
+    io.gitlab.arturbosch.detekt
 }
 
 val reportPath = "build/reports/codestyle"

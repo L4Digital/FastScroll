@@ -42,8 +42,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.get()}")
-    implementation("com.android.tools.build:gradle:${libs.versions.agp.get()}")
-    implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${libs.versions.detekt.get()}")
-    implementation("io.github.gradle-nexus:publish-plugin:1.1.0")
+    implementation(libs.gradle.plugin.android)
+    implementation(libs.gradle.plugin.kotlin)
+    implementation(libs.gradle.plugin.detekt)
+    implementation(libs.gradle.plugin.publish)
 }

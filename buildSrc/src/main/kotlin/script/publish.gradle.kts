@@ -17,8 +17,8 @@
 package script
 
 plugins {
-    id("com.android.library")
-    id("maven-publish")
+    `android-library`
+    `maven-publish`
     signing
 }
 
