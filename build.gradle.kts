@@ -25,7 +25,6 @@ buildscript {
 }
 
 plugins {
-    id("org.gradle.android.cache-fix") version "2.4.6" apply false
     script("detekt")
     script("nexus")
 }
@@ -44,7 +43,6 @@ allprojects {
 }
 
 subprojects {
-    plugin("org.gradle.android.cache-fix")
     script("detekt")
 }
 
