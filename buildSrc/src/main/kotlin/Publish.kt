@@ -27,7 +27,7 @@ object Publish {
         const val artifact = "fastscroll"
         const val group = "io.github.l4digital"
 
-        val version = object : Semantic {
+        val semantic = object : Semantic {
             override val major = 2
             override val minor = 1
             override val patch = 0

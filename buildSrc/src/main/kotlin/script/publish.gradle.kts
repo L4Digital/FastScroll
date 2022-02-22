@@ -16,15 +16,12 @@
 
 package script
 
+import extension.releaseSourceSets
+
 plugins {
     `android-library`
     `maven-publish`
     signing
-}
-
-val sourcesJar by tasks.register<Jar>("sourcesJar") {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
 }
 
 val javadoc by tasks.register<Javadoc>("javadoc") {
@@ -38,15 +35,22 @@ val javadocJar by tasks.register<Jar>("javadocJar") {
     from(javadoc.destinationDir)
 }
 
+@Suppress("SpreadOperator")
+val sourcesJar by tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    val sources = android.releaseSourceSets.map { it.java.srcDirs }
+    from(*sources.toTypedArray())
+}
+
 tasks.register("generateArchives") { dependsOn(sourcesJar, javadocJar) }
 
 artifacts {
-    archives(sourcesJar)
     archives(javadocJar)
+    archives(sourcesJar)
 }
 
 group = Publish.Info.group
-version = Publish.Info.version
+version = Publish.Info.semantic.version
 
 afterEvaluate {
     javadoc.classpath += files(android.libraryVariants.map { variant ->
@@ -58,7 +62,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 artifactId = Publish.Info.artifact
                 groupId = Publish.Info.group
-                version = Publish.Info.version.toString()
+                version = Publish.Info.semantic.version
 
                 artifact(javadocJar)
                 artifact(sourcesJar)
