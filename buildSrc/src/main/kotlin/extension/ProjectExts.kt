@@ -17,7 +17,9 @@
 package extension
 
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getByType
 
 fun Project.getLibVersion(name: String): String = extensions.getByType<VersionCatalogsExtension>()
@@ -40,3 +42,5 @@ fun Project.getModuleSources(vararg excludeModules: String = emptyArray()): Arra
 
     return sources.toTypedArray()
 }
+
+inline fun <reified T : Task> Project.getTask(name: String) = tasks.getByName(name, T::class)

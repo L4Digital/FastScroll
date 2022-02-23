@@ -1,7 +1,7 @@
 [versions]
 agp = "7.1.1"
 detekt = "1.17.1"
-kotlin = "1.6.10"
+kotlin = "1.5.31"
 
 [libraries]
 # AndroidX
@@ -15,6 +15,7 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 # Gradle Plugins
 gradle-plugin-android = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 gradle-plugin-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+gradle-plugin-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "kotlin" }
 gradle-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-plugin-publish = { module = "io.github.gradle-nexus:publish-plugin", version = "1.1.0" }
 
