@@ -19,17 +19,23 @@ package com.l4digital.fastscroll.example.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
-import com.l4digital.fastscroll.example.R
+import com.l4digital.fastscroll.example.databinding.ActivityExamplesBinding
+import com.l4digital.fastscroll.example.extension.setContentView
+import com.l4digital.fastscroll.example.extension.viewBinding
 
 class ExamplesActivity : AppCompatActivity() {
 
+    private val viewBinding by viewBinding(ActivityExamplesBinding::inflate)
+
+    private val containerViewId get() = viewBinding.layoutContent.id
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_examples)
+        viewBinding.setContentView(this)
 
         if (supportFragmentManager.findFragmentByTag(EXAMPLES_FRAGMENT_TAG) == null) {
             supportFragmentManager.commit {
-                add(R.id.layout_content, ExamplesFragment(), EXAMPLES_FRAGMENT_TAG)
+                add(containerViewId, ExamplesFragment(containerViewId), EXAMPLES_FRAGMENT_TAG)
             }
         }
     }

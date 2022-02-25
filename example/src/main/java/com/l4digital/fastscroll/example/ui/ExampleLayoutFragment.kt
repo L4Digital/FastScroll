@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.l4digital.fastscroll.FastScrollView
 import com.l4digital.fastscroll.example.R
 import com.l4digital.fastscroll.example.ui.adapter.ItemExampleAdapter
 
@@ -40,6 +41,7 @@ class ExampleLayoutFragment(@LayoutRes private val layoutId: Int) : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(layoutId, container, false).apply {
-            findViewById<RecyclerView>(R.id.recycler_view).adapter = itemListAdapter
+            findViewById<RecyclerView>(R.id.recycler_view)?.adapter = itemListAdapter
+            findViewById<FastScrollView>(R.id.fastscroll_view)?.adapter = itemListAdapter
         }.rootView
 }
