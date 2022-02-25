@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example.ui
+package com.l4digital.fastscroll.example.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,23 +22,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.l4digital.fastscroll.FastScroller
 import com.l4digital.fastscroll.example.databinding.ItemExampleBinding
 
-@Suppress("MagicNumber")
-class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
-
-    private val itemList = mutableListOf<String>()
-
-    init {
-        repeat(26) { i ->
-            // add several items for each letter in the alphabet
-            repeat(4) {
-                itemList.add("${(65 + i).toChar()} example item")
-            }
-        }
-    }
+class ItemExampleAdapter(
+    private val itemList: List<String>,
+    private val itemSelectListener: ItemSelectListener? = null
+) : RecyclerView.Adapter<ItemExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(ItemExampleBinding.inflate(inflater, parent, false))
+        val itemBinding = ItemExampleBinding.inflate(inflater, parent, false)
+        return ViewHolder(itemBinding, itemSelectListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -49,9 +41,12 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 
     override fun getSectionText(position: Int) = itemList[position][0].toString()
 
-    class ViewHolder(private val binding: ItemExampleBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(
+        private val binding: ItemExampleBinding,
+        itemSelectListener: ItemSelectListener?
+    ) : ItemViewHolder<String>(binding.root, itemSelectListener) {
 
-        fun bind(item: String) {
+        override fun bind(item: String) {
             binding.root.text = item
         }
     }

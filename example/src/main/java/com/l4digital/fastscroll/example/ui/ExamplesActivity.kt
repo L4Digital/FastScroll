@@ -18,21 +18,19 @@ package com.l4digital.fastscroll.example.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.l4digital.fastscroll.example.databinding.ActivityExampleBinding
-import com.l4digital.fastscroll.example.extension.context
-import com.l4digital.fastscroll.example.extension.setContentView
-import com.l4digital.fastscroll.example.extension.viewBinding
+import androidx.fragment.app.commit
+import com.l4digital.fastscroll.example.R
 
-class ExampleActivity : AppCompatActivity() {
-
-    private val viewBinding by viewBinding(ActivityExampleBinding::inflate)
+class ExamplesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding.setContentView(this).apply {
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.adapter = ExampleAdapter()
+        setContentView(R.layout.activity_examples)
+
+        if (supportFragmentManager.findFragmentByTag(EXAMPLES_FRAGMENT_TAG) == null) {
+            supportFragmentManager.commit {
+                add(R.id.layout_content, ExamplesFragment(), EXAMPLES_FRAGMENT_TAG)
+            }
         }
     }
 }

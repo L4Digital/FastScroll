@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.l4digital.fastscroll.example">
 
@@ -27,7 +28,7 @@
         tools:ignore="DataExtractionRules,GoogleAppIndexingWarning">
 
         <activity
-            android:name=".ui.ExampleActivity"
+            android:name=".ui.ExamplesActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

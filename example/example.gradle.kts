@@ -55,7 +55,14 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
 
     implementation(projects.fastscroll)
+
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.ktx)
+
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.coordinatorlayout)
+    implementation(libs.androidx.swiperefreshlayout)
+
+    implementation(libs.google.material)
 }
