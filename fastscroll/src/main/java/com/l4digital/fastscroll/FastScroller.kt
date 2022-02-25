@@ -186,7 +186,10 @@ class FastScroller : LinearLayout {
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
         context.layout(attrs)
-        layoutParams = generateLayoutParams(attrs)
+        layoutParams = attrs?.let { generateLayoutParams(it) } ?: LayoutParams(
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.MATCH_PARENT
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")

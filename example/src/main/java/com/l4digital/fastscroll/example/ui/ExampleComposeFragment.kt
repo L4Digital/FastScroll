@@ -18,23 +18,35 @@ package com.l4digital.fastscroll.example.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.l4digital.fastscroll.FastScrollView
 import com.l4digital.fastscroll.example.R
 import com.l4digital.fastscroll.example.data.ExampleDataProvider
+import com.l4digital.fastscroll.example.extension.getCompatColor
 import com.l4digital.fastscroll.example.ui.adapter.ItemExampleAdapter
 
-class ExampleLayoutFragment(@LayoutRes private val layoutId: Int) : Fragment() {
+class ExampleComposeFragment : Fragment() {
 
     private val itemListAdapter = ItemExampleAdapter(ExampleDataProvider.itemList)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(layoutId, container, false).apply {
-            findViewById<RecyclerView>(R.id.recycler_view)?.adapter = itemListAdapter
-            findViewById<FastScrollView>(R.id.fastscroll_view)?.adapter = itemListAdapter
-        }.rootView
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        ComposeView(requireContext()).apply { setContent { ExampleComposeScreen() } }
+
+    @Composable
+    private fun ExampleComposeScreen() {
+        AndroidView(factory = { context ->
+            FastScrollView(context).apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = itemListAdapter
+                setBubbleColor(context.getCompatColor(R.color.fastscroll_bubble))
+                setBubbleTextColor(context.getCompatColor(R.color.fastscroll_text))
+                setHandleColor(context.getCompatColor(R.color.fastscroll_handle))
+            }
+        })
+    }
 }
