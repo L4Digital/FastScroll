@@ -80,9 +80,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 
     // ...
 
-    override fun getSectionText(position: Int): CharSequence {
-        return getItem(position).getIndex()
-    }
+    override fun getSectionText(position: Int) = getItem(position).getSectionIndex()
 }
 ~~~
 
@@ -128,9 +126,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 
     // ...
 
-    override fun getSectionText(position: Int): CharSequence {
-        return getItem(position).getIndex()
-    }
+    override fun getSectionText(position: Int) = getItem(position).getSectionIndex()
 }
 ~~~
 
@@ -138,7 +134,7 @@ class ExampleAdapter : RecyclerView.Adapter<ExampleAdapter.ViewHolder>(), FastSc
 If you are unable to use the `FastScrollRecyclerView` or `FastScrollView`, you can add a `FastScroller` to your layout and implement with any `RecyclerView`. See this [github issue](https://github.com/L4Digital/FastScroll/issues/4#issuecomment-256975634) for an example.
 
 #### FastScrollListener:
-An optional `FastScrollListener` can be added to receive messages when fast scrolling starts or stops.
+An optional `FastScrollListener` can be added to receive events when fast scrolling starts or stops.
 
 ~~~kotlin
 override fun onCreate(savedInstanceState: Bundle?) {

@@ -16,10 +16,17 @@
 
 package com.l4digital.fastscroll.example.extension
 
+import android.app.Activity
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
+inline fun <V : ViewBinding> Activity.viewBinding(crossinline inflater: (LayoutInflater) -> V) = lazy {
+    inflater(layoutInflater)
+}
+
 inline fun <V : ViewBinding> Fragment.viewBinding(crossinline inflater: (LayoutInflater) -> V) = lazy {
     inflater(layoutInflater)
 }
+
+fun <V : ViewBinding> V.setContentView(activity: Activity) = apply { activity.setContentView(root) }

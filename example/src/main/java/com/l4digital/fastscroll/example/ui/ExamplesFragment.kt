@@ -29,15 +29,20 @@ import com.l4digital.fastscroll.example.ui.adapter.ItemSelectListener
 
 const val EXAMPLES_FRAGMENT_TAG = "ExamplesFragment"
 
-class ExamplesFragment : Fragment(), ItemSelectListener {
+class ExamplesFragment(private val containerViewId: Int) : Fragment(), ItemSelectListener {
 
     private val exampleList = mapOf(
-        R.layout.fragment_example_constraint to "ConstraintLayout Example",
-        R.layout.fragment_example_frame to "FrameLayout Example",
-        R.layout.fragment_example_relative to "RelativeLayout Example",
+        R.layout.example_layout_constraint to "ConstraintLayout Example",
+        R.layout.example_layout_coordinator to "CoordinatorLayout Example",
+        R.layout.example_layout_frame to "FrameLayout Example",
+        R.layout.example_layout_relative to "RelativeLayout Example",
+        R.layout.example_layout_swipe_refresh to "SwipeRefreshLayout Example",
+        R.layout.example_bubble_small_always to "Small Bubble Always Example",
+        R.layout.example_bubble_none to "No Bubble Example",
+        R.layout.example_track_visible to "Show Track Example"
     )
 
-    private val exampleListAdapter = ItemExampleAdapter(exampleList.map { it.value }, this@ExamplesFragment)
+    private val exampleListAdapter = ItemExampleAdapter(exampleList.map { it.value }, this)
 
     private val viewBinding by viewBinding(FragmentExamplesBinding::inflate)
 
@@ -57,7 +62,7 @@ class ExamplesFragment : Fragment(), ItemSelectListener {
                 R.anim.slide_in_right, R.anim.slide_out_left,
                 R.anim.slide_in_left, R.anim.slide_out_right
             )
-            replace(R.id.layout_content, ExampleLayoutFragment(example.key))
+            replace(containerViewId, ExampleLayoutFragment(example.key))
             addToBackStack(null)
         }
     }
