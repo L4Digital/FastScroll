@@ -15,15 +15,19 @@
   ~ limitations under the License.
   -->
 
-<TextView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:gravity="center_vertical"
-    android:padding="16dp"
-    tools:ignore="Overdraw"
-    tools:text="@tools:sample/full_names" />
+    android:layout_height="match_parent">
+
+    <com.l4digital.fastscroll.FastScrollRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:bubbleColor="@color/fastscroll_bubble"
+        app:bubbleTextColor="@color/fastscroll_text"
+        app:handleColor="@color/fastscroll_handle"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+</FrameLayout>

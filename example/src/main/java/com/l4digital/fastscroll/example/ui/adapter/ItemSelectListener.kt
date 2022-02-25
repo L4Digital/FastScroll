@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example.extension
+package com.l4digital.fastscroll.example.ui.adapter
 
-import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
-import androidx.viewbinding.ViewBinding
-
-inline fun <V : ViewBinding> AppCompatActivity.viewBinding(crossinline inflater: (LayoutInflater) -> V) = lazy {
-    inflater(layoutInflater)
+interface ItemSelectListener {
+    fun onItemSelected(position: Int)
 }
