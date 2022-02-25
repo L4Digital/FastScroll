@@ -23,7 +23,7 @@ plugins {
 }
 
 android {
-    defaultSdkVersions()
+    defaultSdkVersions(minSdk = 16)
     defaultLintOptions()
 
     defaultConfig {

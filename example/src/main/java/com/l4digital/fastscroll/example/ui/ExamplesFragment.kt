@@ -32,6 +32,7 @@ const val EXAMPLES_FRAGMENT_TAG = "ExamplesFragment"
 class ExamplesFragment(private val containerViewId: Int) : Fragment(), ItemSelectListener {
 
     private val exampleList = mapOf(
+        0 to "Compose Example",
         R.layout.example_layout_constraint to "ConstraintLayout Example",
         R.layout.example_layout_coordinator to "CoordinatorLayout Example",
         R.layout.example_layout_frame to "FrameLayout Example",
@@ -56,13 +57,18 @@ class ExamplesFragment(private val containerViewId: Int) : Fragment(), ItemSelec
 
     override fun onItemSelected(position: Int) {
         val example = exampleList.entries.elementAt(position)
+        val fragment = when (example.key) {
+            0 -> ExampleComposeFragment()
+            else -> ExampleLayoutFragment(example.key)
+        }
+
         activity?.title = example.value
         parentFragmentManager.commit {
             setCustomAnimations(
                 R.anim.slide_in_right, R.anim.slide_out_left,
                 R.anim.slide_in_left, R.anim.slide_out_right
             )
-            replace(containerViewId, ExampleLayoutFragment(example.key))
+            replace(containerViewId, fragment)
             addToBackStack(null)
         }
     }

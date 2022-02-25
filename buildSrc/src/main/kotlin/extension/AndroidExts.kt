@@ -22,16 +22,15 @@ import com.android.build.gradle.BaseExtension
 import org.gradle.api.JavaVersion
 
 private const val ANDROID_SDK = 31
-private const val ANDROID_MIN_SDK = 16
 
 /**
  * Sets the default Android SDK and Java versions
  */
-fun BaseExtension.defaultSdkVersions() {
+fun BaseExtension.defaultSdkVersions(minSdk: Int) {
     compileSdkVersion(ANDROID_SDK)
 
     defaultConfig {
-        minSdk = ANDROID_MIN_SDK
+        this.minSdk = minSdk
         targetSdk = ANDROID_SDK
     }
 

@@ -23,7 +23,7 @@ plugins {
 }
 
 android {
-    defaultSdkVersions()
+    defaultSdkVersions(minSdk = 21)
     defaultLintOptions()
 
     defaultConfig {
@@ -34,8 +34,12 @@ android {
     }
 
     buildFeatures {
-        buildConfig = true
+        compose = true
         viewBinding = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 
     kotlinOptions {
@@ -60,6 +64,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.ktx)
 
+    implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.coordinatorlayout)
     implementation(libs.androidx.swiperefreshlayout)
