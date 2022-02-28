@@ -29,4 +29,5 @@ inline fun <V : ViewBinding> Fragment.viewBinding(crossinline inflater: (LayoutI
     inflater(layoutInflater)
 }
 
-fun <V : ViewBinding> V.setContentView(activity: Activity) = apply { activity.setContentView(root) }
+inline fun <V : ViewBinding> V.setContentView(activity: Activity, block: V.() -> Unit = {}) =
+    activity.setContentView(root).also { block() }
