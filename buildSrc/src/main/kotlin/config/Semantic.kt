@@ -23,5 +23,6 @@ interface Semantic {
     val major: Int
     val minor: Int
     val patch: Int
-    val version get() = "$major.$minor.$patch"
+    val identifier: String? get() = null
+    val version get() = "$major.$minor.$patch${identifier?.let { "-$it" } ?: ""}"
 }

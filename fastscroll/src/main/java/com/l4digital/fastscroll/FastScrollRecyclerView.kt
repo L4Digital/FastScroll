@@ -75,14 +75,6 @@ class FastScrollRecyclerView : RecyclerView {
         fastScroller.setFastScrollListener(fastScrollListener)
 
     /**
-     * Set a new [FastScroller.SectionIndexer] that provides section text for the [FastScroller].
-     *
-     * @param sectionIndexer The new [FastScroller.SectionIndexer] to set, or null to set no none
-     */
-    fun setSectionIndexer(sectionIndexer: FastScroller.SectionIndexer?) =
-        fastScroller.setSectionIndexer(sectionIndexer)
-
-    /**
      * Set the enabled state of fast scrolling.
      *
      * @param enabled True to enable fast scrolling, false otherwise

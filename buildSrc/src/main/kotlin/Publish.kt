@@ -28,9 +28,10 @@ object Publish {
         const val group = "io.github.l4digital"
 
         val semantic = object : Semantic {
-            override val major = 2
-            override val minor = 1
+            override val major = 3
+            override val minor = 0
             override val patch = 0
+            override val identifier = "beta.1"
             override fun toString() = version
         }
     }

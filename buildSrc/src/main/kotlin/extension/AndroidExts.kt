@@ -19,7 +19,6 @@ package extension
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.Lint
 import com.android.build.gradle.BaseExtension
-import org.gradle.api.JavaVersion
 
 private const val ANDROID_SDK = 31
 
@@ -32,11 +31,6 @@ fun BaseExtension.defaultSdkVersions(minSdk: Int) {
     defaultConfig {
         this.minSdk = minSdk
         targetSdk = ANDROID_SDK
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
