@@ -42,10 +42,6 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
