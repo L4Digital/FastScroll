@@ -20,6 +20,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build.VERSION
@@ -42,6 +43,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StyleableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -90,11 +92,7 @@ class FastScroller : LinearLayout {
 
     enum class Size(@DrawableRes val drawableId: Int, @DimenRes val textSizeId: Int) {
         NORMAL(R.drawable.fastscroll_bubble, R.dimen.fastscroll_bubble_text_size),
-        SMALL(R.drawable.fastscroll_bubble_small, R.dimen.fastscroll_bubble_text_size_small);
-
-        companion object {
-            fun from(ordinal: Int) = if (ordinal >= 0 && ordinal < values().size) values()[ordinal] else NORMAL
-        }
+        SMALL(R.drawable.fastscroll_bubble_small, R.dimen.fastscroll_bubble_text_size_small)
     }
 
     private val Size.textSize get() = resources.getDimension(textSizeId)
@@ -604,6 +602,10 @@ class FastScroller : LinearLayout {
         handleImage?.setCompatTint(if (selected) bubbleColor else handleColor)
     }
 
+    private fun TypedArray.getSize(@StyleableRes index: Int, defValue: Int) = getInt(index, defValue).let { ordinal ->
+        Size.values().find { it.ordinal == ordinal } ?: Size.NORMAL
+    }
+
     private fun Context.layout(attrs: AttributeSet? = null, size: Size = Size.NORMAL) {
         inflate(this, R.layout.fast_scroller, this@FastScroller)
 
@@ -627,7 +629,7 @@ class FastScroller : LinearLayout {
             showBubble = getBoolean(R.styleable.FastScroller_showBubble, showBubble)
             showBubbleAlways = getBoolean(R.styleable.FastScroller_showBubbleAlways, showBubbleAlways)
             showTrack = getBoolean(R.styleable.FastScroller_showTrack, showTrack)
-            bubbleSize = Size.from(getInt(R.styleable.FastScroller_bubbleSize, size.ordinal))
+            bubbleSize = getSize(R.styleable.FastScroller_bubbleSize, size.ordinal)
             textSize = getDimension(R.styleable.FastScroller_bubbleTextSize, bubbleSize.textSize)
         }
 
