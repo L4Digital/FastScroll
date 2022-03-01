@@ -26,8 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:bubbleColor="@color/fastscroll_bubble"
+        app:bubbleSize="small"
         app:bubbleTextColor="@color/fastscroll_text"
         app:handleColor="@color/fastscroll_handle"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:showBubbleAlways="true" />
 
 </FrameLayout>

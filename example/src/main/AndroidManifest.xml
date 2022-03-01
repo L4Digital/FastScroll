@@ -28,7 +28,7 @@
         tools:ignore="DataExtractionRules,GoogleAppIndexingWarning">
 
         <activity
-            android:name=".ui.ExamplesActivity"
+            android:name=".ExamplesActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

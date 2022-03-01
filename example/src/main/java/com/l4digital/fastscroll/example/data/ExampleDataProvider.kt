@@ -19,10 +19,16 @@ package com.l4digital.fastscroll.example.data
 @Suppress("MagicNumber")
 object ExampleDataProvider {
 
-    val itemList = mutableListOf<String>().apply {
+    val alphaList = mutableListOf<String>().apply {
         repeat(26) { i ->
             // add several items for each letter in the alphabet
             repeat(5) { add("${(65 + i).toChar()} example item") }
         }
     }
+
+    val androidList = mutableListOf(
+        "Cupcake", "Donut", "Eclair", "Froyo", "Gingerbread", "Honeycomb", "Ice Cream Sandwich",
+        "Jelly Bean", "KitKat", "Lollipop", "Marshmallow", "Nougat", "Oreo", "Pie", "Quince Tart",
+        "Red Velvet Cake", "Snow Cone", "Tiramisu"
+    )
 }

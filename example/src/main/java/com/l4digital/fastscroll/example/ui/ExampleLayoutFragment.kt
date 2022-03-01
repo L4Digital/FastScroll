@@ -30,7 +30,7 @@ import com.l4digital.fastscroll.example.ui.adapter.ItemExampleAdapter
 
 class ExampleLayoutFragment(@LayoutRes private val layoutId: Int) : Fragment() {
 
-    private val itemListAdapter = ItemExampleAdapter(ExampleDataProvider.itemList)
+    private val itemListAdapter = ItemExampleAdapter(ExampleDataProvider.alphaList)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(layoutId, container, false).apply {
