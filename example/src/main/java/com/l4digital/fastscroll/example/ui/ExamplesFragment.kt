@@ -25,11 +25,8 @@ import com.l4digital.fastscroll.example.R
 import com.l4digital.fastscroll.example.databinding.FragmentExamplesBinding
 import com.l4digital.fastscroll.example.extension.viewBinding
 import com.l4digital.fastscroll.example.ui.adapter.ItemExampleAdapter
-import com.l4digital.fastscroll.example.ui.adapter.ItemSelectListener
 
-const val EXAMPLES_FRAGMENT_TAG = "ExamplesFragment"
-
-class ExamplesFragment(private val containerViewId: Int) : Fragment(), ItemSelectListener {
+class ExamplesFragment(private val containerViewId: Int) : Fragment() {
 
     private val exampleList = mapOf(
         0 to "Compose Example",
@@ -40,25 +37,30 @@ class ExamplesFragment(private val containerViewId: Int) : Fragment(), ItemSelec
         R.layout.example_layout_swipe_refresh to "SwipeRefreshLayout Example",
         R.layout.example_bubble_small_always to "Small Bubble Always Example",
         R.layout.example_bubble_none to "No Bubble Example",
-        R.layout.example_track_visible to "Show Track Example"
+        R.layout.example_track_visible to "Show Track Example",
+        R.menu.menu_sorting to "Sorting Example"
     )
 
-    private val exampleListAdapter = ItemExampleAdapter(exampleList.map { it.value }, this)
+    private val exampleListAdapter = ItemExampleAdapter(exampleList.map { it.value }, ::onItemSelected)
 
-    private val viewBinding by viewBinding(FragmentExamplesBinding::inflate)
+    private val binding by viewBinding(FragmentExamplesBinding::inflate)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        viewBinding.apply { recyclerView.adapter = exampleListAdapter }.root
+        binding.apply {
+            recyclerView.adapter = exampleListAdapter
+            recyclerView.setFastScrollEnabled(false)
+        }.root
 
     override fun onStart() {
         super.onStart()
         activity?.setTitle(R.string.app_name)
     }
 
-    override fun onItemSelected(position: Int) {
+    private fun onItemSelected(position: Int) {
         val example = exampleList.entries.elementAt(position)
         val fragment = when (example.key) {
             0 -> ExampleComposeFragment()
+            R.menu.menu_sorting -> ExampleSortingFragment()
             else -> ExampleLayoutFragment(example.key)
         }
 

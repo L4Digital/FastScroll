@@ -17,9 +17,12 @@
 package com.l4digital.fastscroll.example.extension
 
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 
 @ColorInt
 fun Context.getCompatColor(@ColorRes colorId: Int) = ContextCompat.getColor(this, colorId)
+
+fun Context.toastShort(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()

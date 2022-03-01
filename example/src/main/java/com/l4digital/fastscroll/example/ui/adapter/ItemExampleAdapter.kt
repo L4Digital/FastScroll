@@ -18,14 +18,24 @@ package com.l4digital.fastscroll.example.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.l4digital.fastscroll.FastScroller
 import com.l4digital.fastscroll.example.databinding.ItemExampleBinding
 
+private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<String>() {
+    override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem.hashCode() == newItem.hashCode()
+    override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+}
+
 class ItemExampleAdapter(
-    private val itemList: List<String>,
+    itemList: List<String>? = null,
     private val itemSelectListener: ItemSelectListener? = null
-) : RecyclerView.Adapter<ItemExampleAdapter.ViewHolder>(), FastScroller.SectionIndexer {
+) : ListAdapter<String, ItemExampleAdapter.ViewHolder>(DIFF_CALLBACK), FastScroller.SectionIndexer {
+
+    init {
+        itemList?.let { submitList(it) }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,13 +43,9 @@ class ItemExampleAdapter(
         return ViewHolder(itemBinding, itemSelectListener)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(itemList[position])
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
-    override fun getItemCount() = itemList.size
-
-    override fun getSectionText(position: Int) = itemList[position][0].toString()
+    override fun getSectionText(position: Int) = getItem(position)[0].toString()
 
     class ViewHolder(
         private val binding: ItemExampleBinding,

@@ -19,6 +19,8 @@ package com.l4digital.fastscroll.example.ui.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
+typealias ItemSelectListener = (Int) -> Unit
+
 abstract class ItemViewHolder<Item>(
     view: View,
     private val itemSelectListener: ItemSelectListener? = null
@@ -34,7 +36,7 @@ abstract class ItemViewHolder<Item>(
         val position = bindingAdapterPosition
 
         if (position != RecyclerView.NO_POSITION) {
-            itemSelectListener?.onItemSelected(position)
+            itemSelectListener?.invoke(position)
         }
     }
 }

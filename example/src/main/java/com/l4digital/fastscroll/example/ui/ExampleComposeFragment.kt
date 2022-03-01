@@ -32,7 +32,7 @@ import com.l4digital.fastscroll.example.ui.adapter.ItemExampleAdapter
 
 class ExampleComposeFragment : Fragment() {
 
-    private val itemListAdapter = ItemExampleAdapter(ExampleDataProvider.itemList)
+    private val itemListAdapter = ItemExampleAdapter(ExampleDataProvider.alphaList)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         ComposeView(requireContext()).apply { setContent { ExampleComposeScreen() } }

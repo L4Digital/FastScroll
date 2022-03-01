@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.l4digital.fastscroll.example.ui
+package com.l4digital.fastscroll.example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -22,21 +22,20 @@ import androidx.fragment.app.commit
 import com.l4digital.fastscroll.example.databinding.ActivityExamplesBinding
 import com.l4digital.fastscroll.example.extension.setContentView
 import com.l4digital.fastscroll.example.extension.viewBinding
+import com.l4digital.fastscroll.example.ui.ExamplesFragment
 
 class ExamplesActivity : AppCompatActivity() {
 
-    private val viewBinding by viewBinding(ActivityExamplesBinding::inflate)
+    private val binding by viewBinding(ActivityExamplesBinding::inflate)
 
-    private val containerViewId get() = viewBinding.layoutContent.id
+    private val containerViewId get() = binding.layoutContent.id
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding.setContentView(this)
+        binding.setContentView(this)
 
-        if (supportFragmentManager.findFragmentByTag(EXAMPLES_FRAGMENT_TAG) == null) {
-            supportFragmentManager.commit {
-                add(containerViewId, ExamplesFragment(containerViewId), EXAMPLES_FRAGMENT_TAG)
-            }
+        supportFragmentManager.commit {
+            add(containerViewId, ExamplesFragment(containerViewId))
         }
     }
 }

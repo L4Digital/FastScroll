@@ -15,9 +15,14 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <string name="app_name">FastScroll Examples</string>
-    <string name="action_sort">Sort</string>
+    <item
+        android:id="@+id/menu_sort"
+        android:icon="@drawable/ic_action_sort"
+        android:title="@string/action_sort"
+        app:showAsAction="always" />
 
-</resources>
+</menu>
