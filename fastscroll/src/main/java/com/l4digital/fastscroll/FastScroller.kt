@@ -175,6 +175,13 @@ class FastScroller : LinearLayout {
         }
     }
 
+    private val RecyclerView.scrollProportion: Float
+        get() {
+            val rangeDiff = computeVerticalScrollRange() - computeVerticalScrollExtent()
+            val proportion = computeVerticalScrollOffset() / if (rangeDiff > 0) rangeDiff.toFloat() else 1f
+            return viewHeight * proportion
+        }
+
     @JvmOverloads
     constructor(context: Context, size: Size = Size.NORMAL) : super(context) {
         context.layout(size = size)
@@ -188,6 +195,10 @@ class FastScroller : LinearLayout {
             LayoutParams.WRAP_CONTENT,
             LayoutParams.MATCH_PARENT
         )
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldW: Int, oldH: Int) = super.onSizeChanged(w, h, oldW, oldH).also {
+        viewHeight = h
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -477,19 +488,6 @@ class FastScroller : LinearLayout {
     fun setBubbleTextSize(size: Int) {
         bubbleView.textSize = size.toFloat()
     }
-
-    override fun onSizeChanged(w: Int, h: Int, oldW: Int, oldH: Int) = super.onSizeChanged(w, h, oldW, oldH).also {
-        viewHeight = h
-    }
-
-    private val RecyclerView.scrollProportion: Float
-        get() {
-            val verticalScrollOffset = computeVerticalScrollOffset()
-            val verticalScrollRange = computeVerticalScrollRange()
-            val rangeDiff = (verticalScrollRange - viewHeight).toFloat()
-            val proportion = verticalScrollOffset.toFloat() / if (rangeDiff > 0) rangeDiff else 1f
-            return viewHeight * proportion
-        }
 
     private fun getRecyclerViewTargetPosition(y: Float) = recyclerView?.let { recyclerView ->
         val itemCount = recyclerView.adapter?.itemCount ?: 0

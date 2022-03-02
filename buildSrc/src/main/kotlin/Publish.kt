@@ -31,7 +31,7 @@ object Publish {
             override val major = 3
             override val minor = 0
             override val patch = 0
-            override val identifier = "beta.1"
+            override val identifier = "beta.2"
             override fun toString() = version
         }
     }
