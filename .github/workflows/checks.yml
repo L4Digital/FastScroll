@@ -7,7 +7,7 @@ on:
 
 jobs:
   detekt:
-    name: detektAll
+    name: detekt
     runs-on: ubuntu-20.04
     container:
       image: randr0id/android-docker:31
@@ -15,12 +15,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Detekt checks
-        run: ./gradlew detektAll
+        run: ./gradlew detekt detektBuildSrc
       - name: Archive Detekt report
         uses: actions/upload-artifact@v2
         with:
-          name: detekt-report
-          path: build/reports/codestyle/*.html
+          name: detekt-reports
+          path: ./**/build/reports/detekt/*.html
 
   lint:
     name: lintRelease
@@ -35,7 +35,7 @@ jobs:
       - name: Archive Lint report
         uses: actions/upload-artifact@v2
         with:
-          name: lint-report
+          name: lint-reports
           path: ./**/build/reports/lint*.html
 
   build:

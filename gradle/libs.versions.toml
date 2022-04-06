@@ -1,7 +1,7 @@
 [versions]
 agp = "7.1.2"
 compose = "1.0.5"
-detekt = "1.17.1"
+detekt = "1.19.0"
 kotlin = "1.5.31"
 
 [libraries]

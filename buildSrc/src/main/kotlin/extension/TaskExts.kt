@@ -16,7 +16,13 @@
 
 package extension
 
-import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.tasks.TaskContainer
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.kotlin.dsl.register
 
-@Suppress("ObjectPropertyName") private var _detektVersion: String? = null
-val Project.detektVersion get() = _detektVersion ?: getLibVersion("detekt").also { _detektVersion = it }
+inline fun <reified T : Task> TaskContainer.registerOnce(
+    name: String,
+    noinline config: T.() -> Unit
+): TaskProvider<T>? =
+    if (findByName(name) == null) register(name, config) else null

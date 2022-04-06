@@ -16,26 +16,18 @@
 
 package script
 
-import extension.detektVersion
-import extension.getModuleSources
+import extension.getLibVersion
+import extension.registerOnce
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     io.gitlab.arturbosch.detekt
 }
 
-val reportPath = "build/reports/codestyle"
+val detektVersion = getLibVersion("detekt")
 
 detekt {
-    toolVersion = detektVersion
-    config = files("$rootDir/config/detekt/detekt.yml")
-    autoCorrect = true
     parallel = true
-
-    reports {
-        sarif.enabled = false
-        txt.enabled = false
-    }
 }
 
 dependencies {
@@ -48,25 +40,18 @@ tasks.withType<Detekt>().configureEach {
     jvmTarget = "1.8"
 
     reports {
-        sarif.enabled = false
-        txt.enabled = false
+        sarif.required.set(false)
+        txt.required.set(false)
     }
 }
 
 /**
- * Runs detekt for all Kotlin files.
+ * Runs detekt for all Kotlin files in buildSrc
  */
-if (rootProject.tasks.findByName("detektAll") == null) {
-    rootProject.tasks.register<Detekt>("detektAll") {
-        group = "verification"
-        description = "Check Kotlin code style for all files."
-        source(project.getModuleSources(), "buildSrc")
-        include("**/java/**/*.kt", "**/kotlin/**", "*.kts")
-        exclude("build/")
-
-        reports {
-            html.destination = file("$reportPath/detekt.html")
-            xml.destination = file("$reportPath/detekt.xml")
-        }
-    }
+rootProject.tasks.registerOnce<Detekt>("detektBuildSrc") {
+    group = "verification"
+    description = "Check Kotlin code style for buildSrc files."
+    source("buildSrc")
+    include("**/kotlin/**", "*.kts")
+    exclude("build/")
 }
