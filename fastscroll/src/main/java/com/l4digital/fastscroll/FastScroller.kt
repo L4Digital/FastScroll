@@ -202,51 +202,7 @@ class FastScroller : LinearLayout {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        val setYPositions: () -> Unit = {
-            val y = event.y
-            setViewPositions(y)
-            setRecyclerViewPosition(y)
-        }
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                if (event.x < handleView.x - scrollbar.compatPaddingStart) return false
-
-                requestDisallowInterceptTouchEvent(true)
-                setHandleSelected(true)
-
-                handler.removeCallbacks(scrollbarHider)
-                scrollbarAnimator?.cancel()
-                bubbleAnimator?.cancel()
-
-                if (!scrollbar.isVisible) showScrollbar()
-                if (showBubble && sectionIndexer != null) showBubble()
-
-                fastScrollListener?.onFastScrollStart(this)
-
-                setYPositions()
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                setYPositions()
-                return true
-            }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                requestDisallowInterceptTouchEvent(false)
-                setHandleSelected(false)
-
-                if (hideScrollbar) handler.postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY)
-                if (!showBubbleAlways) hideBubble()
-
-                fastScrollListener?.onFastScrollStop(this)
-
-                return true
-            }
-        }
-
-        return super.onTouchEvent(event)
-    }
+    override fun onTouchEvent(event: MotionEvent) = handleTouchEvent(this, event) || super.onTouchEvent(event)
 
     /**
      * Set the enabled state of this view.
@@ -530,6 +486,58 @@ class FastScroller : LinearLayout {
         }
     }
 
+    private fun setHandleSelected(selected: Boolean) {
+        handleView.isSelected = selected
+        handleImage?.setCompatTint(if (selected) bubbleColor else handleColor)
+    }
+
+    private fun handleTouchEvent(view: View, event: MotionEvent): Boolean {
+        val setYPositions: () -> Unit = {
+            val y = event.y
+            setViewPositions(y)
+            setRecyclerViewPosition(y)
+        }
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                if (event.x < handleView.x - scrollbar.compatPaddingStart) return false
+
+                requestDisallowInterceptTouchEvent(true)
+                setHandleSelected(view == scrollbar)
+
+                handler.removeCallbacks(scrollbarHider)
+                scrollbarAnimator?.cancel()
+                bubbleAnimator?.cancel()
+
+                if (!scrollbar.isVisible) showScrollbar()
+                if (showBubble && sectionIndexer != null) showBubble()
+
+                fastScrollListener?.onFastScrollStart(this)
+
+                if (view == scrollbar) setYPositions()
+                return true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                setHandleSelected(true)
+                setYPositions()
+                return true
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                requestDisallowInterceptTouchEvent(false)
+                setHandleSelected(false)
+
+                if (hideScrollbar) handler.postDelayed(scrollbarHider, SCROLLBAR_HIDE_DELAY)
+                if (!showBubbleAlways) hideBubble()
+
+                fastScrollListener?.onFastScrollStop(this)
+
+                return true
+            }
+        }
+
+        return false
+    }
+
     private fun updateViewHeights() {
         val measureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
         bubbleView.measure(measureSpec, measureSpec)
@@ -567,8 +575,9 @@ class FastScroller : LinearLayout {
         }
     }
 
+    @Suppress("UnnecessaryParentheses")
     private fun showScrollbar() {
-        if (recyclerView?.computeVerticalScrollRange() ?: 0 - viewHeight > 0) {
+        if ((recyclerView?.computeVerticalScrollRange() ?: (0 - viewHeight)) > 0) {
             scrollbar.translationX = scrollbarPaddingEnd
             scrollbar.isVisible = true
             scrollbarAnimator = scrollbar.animate().translationX(0f).alpha(1f)
@@ -593,11 +602,6 @@ class FastScroller : LinearLayout {
                     scrollbarAnimator = null
                 }
             })
-    }
-
-    private fun setHandleSelected(selected: Boolean) {
-        handleView.isSelected = selected
-        handleImage?.setCompatTint(if (selected) bubbleColor else handleColor)
     }
 
     private fun TypedArray.getSize(@StyleableRes index: Int, defValue: Int) = getInt(index, defValue).let { ordinal ->
@@ -640,6 +644,7 @@ class FastScroller : LinearLayout {
         setTrackVisible(showTrack)
 
         bubbleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+        scrollbar.setOnTouchListener(::handleTouchEvent)
     }
 
     /**
