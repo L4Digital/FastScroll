@@ -15,7 +15,7 @@ FastScroll was inspired by this [Styling Android blog post](https://blog.styling
 #### Gradle:
 ~~~groovy
 dependencies {
-    implementation "io.github.l4digital:fastscroll:2.1.0"
+    implementation "io.github.l4digital:fastscroll:3.0.0"
 }
 ~~~
 
@@ -24,7 +24,7 @@ dependencies {
 <dependency>
   <groupId>io.github.l4digital</groupId>
   <artifactId>fastscroll</artifactId>
-  <version>2.1.0</version>
+  <version>3.0.0</version>
 </dependency>
 ~~~
 
@@ -113,8 +113,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
     setContentView(R.layout.activity_example)
 
     findViewById<FastScrollView>(R.id.fastscroll_view).apply {
-        setLayoutManager(LinearLayoutManager(context))
-        setAdapter(ExampleAdapter())
+        layoutManager = LinearLayoutManager(context)
+        adapter = ExampleAdapter()
     }
 }
 ~~~
