@@ -18,17 +18,7 @@ package extension
 
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByName
-import org.gradle.kotlin.dsl.getByType
-
-/**
- * Get a library version from the Version Catalog
- */
-fun Project.getLibVersion(name: String): String = rootProject.extensions.getByType<VersionCatalogsExtension>()
-    .named("libs")
-    .findVersion(name).get()
-    .requiredVersion
 
 /**
  * Get array of source path for all modules

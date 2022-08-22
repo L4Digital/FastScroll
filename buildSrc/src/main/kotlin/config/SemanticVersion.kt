@@ -19,10 +19,10 @@ package config
 /**
  * Represents a Semantic Version -> https://semver.org/
  */
-interface Semantic {
+interface SemanticVersion {
     val major: Int
     val minor: Int
     val patch: Int
     val identifier: String? get() = null
-    val version get() = "$major.$minor.$patch${identifier?.let { "-$it" } ?: ""}"
+    val version get() = "$major.$minor.$patch${if (identifier.isNullOrEmpty()) "" else "-$identifier"}"
 }

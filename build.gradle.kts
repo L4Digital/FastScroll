@@ -25,8 +25,8 @@ buildscript {
 }
 
 plugins {
-    script("detekt")
-    script("nexus")
+    script.detekt
+    script.nexus
 }
 
 allprojects {

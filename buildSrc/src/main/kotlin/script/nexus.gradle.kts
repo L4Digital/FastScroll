@@ -16,6 +16,7 @@
 
 package script
 
+import config.nexusConfig
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -31,10 +32,10 @@ if (secretPropsFile.exists()) {
     // Read local.properties file first if it exists
     val props = Properties()
     FileInputStream(secretPropsFile).use { props.load(it) }
-    props.forEach { name, value -> Publish.config[name.toString()] = value.toString() }
+    props.forEach { name, value -> nexusConfig[name.toString()] = value.toString() }
 } else {
     // Use system environment variables
-    with(Publish.config) {
+    with(nexusConfig) {
         put("ossrhUsername", env("OSSRH_USERNAME"))
         put("ossrhPassword", env("OSSRH_PASSWORD"))
         put("sonatypeStagingProfileId", env("STAGING_PROFILE_ID"))
@@ -48,9 +49,9 @@ if (secretPropsFile.exists()) {
 nexusPublishing {
     repositories {
         sonatype {
-            stagingProfileId.set(Publish.config["sonatypeStagingProfileId"])
-            username.set(Publish.config["ossrhUsername"])
-            password.set(Publish.config["ossrhPassword"])
+            stagingProfileId.set(nexusConfig["sonatypeStagingProfileId"])
+            username.set(nexusConfig["ossrhUsername"])
+            password.set(nexusConfig["ossrhPassword"])
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }

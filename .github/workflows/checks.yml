@@ -15,7 +15,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Detekt checks
-        run: ./gradlew detekt detektBuildSrc
+        run: ./gradlew detekt detektBuildFiles detektBuildSrc
       - name: Archive Detekt report
         uses: actions/upload-artifact@v2
         with:
