@@ -16,6 +16,8 @@
 
 package script
 
+import config.PublishProperties
+import config.nexusConfig
 import extension.getTask
 import extension.releaseSourceSets
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -51,45 +53,45 @@ artifacts {
     archives(sourcesJar)
 }
 
-group = Publish.Info.group
-version = Publish.Info.semantic.version
+group = PublishProperties.group
+version = PublishProperties.semantic.version
 
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
-                artifactId = Publish.Info.artifact
-                groupId = Publish.Info.group
-                version = Publish.Info.semantic.version
+                artifactId = PublishProperties.artifact
+                groupId = PublishProperties.group
+                version = PublishProperties.semantic.version
 
                 artifact(javadocJar)
                 artifact(sourcesJar)
                 artifact("$buildDir/outputs/aar/$artifactId-release.aar")
 
                 pom {
-                    name.set(Publish.Info.name)
-                    description.set(Publish.Info.description)
-                    url.set(Publish.Info.path)
+                    name.set(PublishProperties.name)
+                    description.set(PublishProperties.description)
+                    url.set(PublishProperties.path)
 
                     licenses {
                         license {
-                            name.set(Publish.License.name)
-                            url.set(Publish.License.url)
+                            name.set(PublishProperties.License.name)
+                            url.set(PublishProperties.License.url)
                         }
                     }
 
                     developers {
                         developer {
-                            id.set(Publish.Developer.id)
-                            name.set(Publish.Developer.name)
-                            email.set(Publish.Developer.email)
+                            id.set(PublishProperties.Developer.id)
+                            name.set(PublishProperties.Developer.name)
+                            email.set(PublishProperties.Developer.email)
                         }
                     }
 
                     scm {
-                        connection.set("scm:git:${Publish.Info.path}.git")
-                        developerConnection.set("scm:git:ssh://${Publish.Info.path}.git")
-                        url.set("https://${Publish.Info.path}/tree/master")
+                        connection.set("scm:git:${PublishProperties.path}.git")
+                        developerConnection.set("scm:git:ssh://${PublishProperties.path}.git")
+                        url.set("https://${PublishProperties.path}/tree/master")
                     }
                 }
             }
@@ -99,9 +101,9 @@ afterEvaluate {
 
 signing {
     useInMemoryPgpKeys(
-        Publish.config["signing.keyId"],
-        Publish.config["signing.key"],
-        Publish.config["signing.password"]
+        nexusConfig["signing.keyId"],
+        nexusConfig["signing.key"],
+        nexusConfig["signing.password"]
     )
     sign(publishing.publications)
 }

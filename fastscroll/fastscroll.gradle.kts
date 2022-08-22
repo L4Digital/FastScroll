@@ -36,8 +36,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib.jdk8)
-
     api(libs.androidx.recyclerview)
 
     implementation(libs.androidx.ktx)

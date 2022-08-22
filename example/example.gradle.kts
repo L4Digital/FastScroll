@@ -52,10 +52,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib.jdk8)
-
-    implementation(projects.fastscroll)
-
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.ktx)
@@ -66,4 +62,6 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.google.material)
+
+    implementation(projects.fastscroll)
 }

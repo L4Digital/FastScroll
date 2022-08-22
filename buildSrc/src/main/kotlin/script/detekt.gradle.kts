@@ -16,7 +16,7 @@
 
 package script
 
-import extension.getLibVersion
+import config.libs
 import extension.registerOnce
 import io.gitlab.arturbosch.detekt.Detekt
 
@@ -24,7 +24,8 @@ plugins {
     io.gitlab.arturbosch.detekt
 }
 
-val detektVersion = getLibVersion("detekt")
+val configFile = "$rootDir/config/detekt/detekt.yml"
+val detektVersion = libs.versions["detekt"]
 
 detekt {
     parallel = true
@@ -35,7 +36,8 @@ dependencies {
 }
 
 tasks.withType<Detekt>().configureEach {
-    config.from(files("$rootDir/config/detekt/detekt.yml"))
+    config.from(configFile)
+    source("src")
     autoCorrect = true
     jvmTarget = "1.8"
 
@@ -46,10 +48,19 @@ tasks.withType<Detekt>().configureEach {
 }
 
 /**
+ * Runs detekt for all Kotlin build files in projects
+ */
+rootProject.tasks.registerOnce<Detekt>("detektBuildFiles") {
+    description = "Check Kotlin code style for project build files."
+    source(rootDir)
+    include("**/*.kts")
+    exclude("build/", "buildSrc")
+}
+
+/**
  * Runs detekt for all Kotlin files in buildSrc
  */
 rootProject.tasks.registerOnce<Detekt>("detektBuildSrc") {
-    group = "verification"
     description = "Check Kotlin code style for buildSrc files."
     source("buildSrc")
     include("**/kotlin/**", "*.kts")

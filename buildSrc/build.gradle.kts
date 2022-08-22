@@ -41,6 +41,10 @@ repositories {
     mavenCentral()
 }
 
+// Suppressing errors until these issues are resolved:
+// https://issuetracker.google.com/issues/187326581
+// https://youtrack.jetbrains.com/issue/KTIJ-19370
+@Suppress("MISSING_DEPENDENCY_CLASS", "UNRESOLVED_REFERENCE", "UNRESOLVED_REFERENCE_WRONG_RECEIVER")
 dependencies {
     implementation(libs.gradle.plugin.android)
     implementation(libs.gradle.plugin.kotlin)
