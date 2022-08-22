@@ -66,6 +66,15 @@ class FastScrollRecyclerView : RecyclerView {
         fastScroller.visibility = visibility
     }
 
+    override fun onAttachedToWindow() = super.onAttachedToWindow().also {
+        fastScroller.attachRecyclerView(this)
+    }
+
+    override fun onDetachedFromWindow() {
+        fastScroller.detachRecyclerView()
+        super.onDetachedFromWindow()
+    }
+
     /**
      * Set a new [FastScroller.FastScrollListener] that will listen to fast scroll events.
      *
@@ -73,6 +82,14 @@ class FastScrollRecyclerView : RecyclerView {
      */
     fun setFastScrollListener(fastScrollListener: FastScrollListener?) =
         fastScroller.setFastScrollListener(fastScrollListener)
+
+    /**
+     * Set a new [FastScroller.SectionIndexer] that provides section text for the [FastScroller].
+     *
+     * @param sectionIndexer The new [FastScroller.SectionIndexer] to set, or null to set no none
+     */
+    fun setSectionIndexer(sectionIndexer: FastScroller.SectionIndexer?) =
+        fastScroller.setSectionIndexer(sectionIndexer)
 
     /**
      * Set the enabled state of fast scrolling.
@@ -140,15 +157,6 @@ class FastScrollRecyclerView : RecyclerView {
      * @param size The scaled pixel text size for the section bubble
      */
     fun setBubbleTextSize(size: Int) = fastScroller.setBubbleTextSize(size)
-
-    override fun onAttachedToWindow() = super.onAttachedToWindow().also {
-        fastScroller.attachRecyclerView(this)
-    }
-
-    override fun onDetachedFromWindow() {
-        fastScroller.detachRecyclerView()
-        super.onDetachedFromWindow()
-    }
 
     private fun Context.layout(attrs: AttributeSet? = null) =
         FastScroller(this, attrs).apply { id = R.id.fast_scroller }
