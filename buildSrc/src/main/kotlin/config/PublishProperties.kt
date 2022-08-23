@@ -4,31 +4,28 @@ package config
  * Provides access to values read from publish.properties
  */
 internal object PublishProperties : GradleProperties("publish.properties") {
-    val name = getString("name")
-    val description = getString("description")
-    val path = getString("path")
-    val artifact = getString("artifact")
-    val group = getString("group")
+    val name = "name".value
+    val description = "description".value
+    val path = "path".value
+    val artifact = "artifact".value
+    val group = "group".value
 
     object Developer {
-        val id = getString("dev.id")
-        val name = getString("dev.name")
-        val email = getString("dev.email")
+        val id = "dev.id".value
+        val name = "dev.name".value
+        val email = "dev.email".value
     }
 
     object License {
-        val name = getString("license.name")
-        val url = getString("license.url")
+        val name = "license.name".value
+        val url = "license.url".value
     }
 
     val semantic = object : SemanticVersion {
-        override val major = getInt("version.major")
-        override val minor = getInt("version.minor")
-        override val patch = getInt("version.patch")
+        override val major = "version.major".value.toInt()
+        override val minor = "version.minor".value.toInt()
+        override val patch = "version.patch".value.toInt()
         override val identifier = get("version.identifier")
         override fun toString() = version
     }
-
-    private fun getInt(key: String) = requireNotNull(get(key)).toInt()
-    private fun getString(key: String) = requireNotNull(get(key)).toString()
 }

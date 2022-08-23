@@ -13,4 +13,6 @@ open class GradleProperties(propertyFile: String) {
     }
 
     operator fun get(key: String): String? = properties.getProperty(key)
+
+    protected val String.value get() = requireNotNull(get(this))
 }
