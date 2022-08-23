@@ -1,14 +1,5 @@
 package config
 
-val nexusConfig = mutableMapOf(
-    "ossrhUsername" to "",
-    "ossrhPassword" to "",
-    "sonatypeStagingProfileId" to "",
-    "signing.key" to "",
-    "signing.keyId" to "",
-    "signing.password" to ""
-)
-
 /**
  * Provides access to values read from publish.properties
  */

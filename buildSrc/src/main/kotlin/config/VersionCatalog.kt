@@ -28,7 +28,7 @@ internal val Project.libs get() = VersionCatalog(this, "libs")
 /**
  * Wrapper class for accessing a [org.gradle.api.artifacts.VersionCatalog]
  */
-class VersionCatalog(project: Project, name: String) {
+internal class VersionCatalog(project: Project, name: String) {
 
     private val catalog = project.rootProject.extensions.getByType<VersionCatalogsExtension>().named(name)
 
