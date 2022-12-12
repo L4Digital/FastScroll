@@ -16,6 +16,8 @@
 
 @file:Suppress("InvalidPackageDeclaration")
 
+rootProject.name = "build-main"
+
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     versionCatalogs {
